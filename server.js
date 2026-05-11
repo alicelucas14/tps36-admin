@@ -545,8 +545,10 @@ app.get('/blogs', async (req, res) => {
         params = [category];
     }
     const categories = await getCategories();
-    db.all(query, params, (err, blogs) => {
-        res.render('blogs', { settings, blogs: blogs || [], categories, currentCategory: category || 'All' });
+    db.all("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 4", (err, recentBlogs) => {
+        db.all(query, params, (err, blogs) => {
+            res.render('blogs', { settings, blogs: blogs || [], categories, currentCategory: category || 'All', recentBlogs: recentBlogs || [] });
+        });
     });
 });
 
@@ -567,9 +569,11 @@ app.get('/faq', async (req, res) => {
 app.get('/blog/:slug', async (req, res) => {
     const settings = await getSettings();
     const categories = await getCategories();
-    db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], (err, blog) => {
-        if (!blog) return res.send('Blog not found!');
-        res.render('blog_single', { blog, settings, categories, currentCategory: blog.category || 'General' });
+    db.all("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 4", (err, recentBlogs) => {
+        db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], (err, blog) => {
+            if (!blog) return res.send('Blog not found!');
+            res.render('blog_single', { blog, settings, categories, currentCategory: blog.category || 'General', recentBlogs: recentBlogs || [] });
+        });
     });
 });
 
