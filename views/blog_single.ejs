@@ -57,30 +57,32 @@
         </div>
         
         <div class="lg:col-span-1 relative z-10">
-            <div class="bg-accent/80 backdrop-blur-md rounded-2xl border border-secondary/20 p-8 sticky top-28 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Categories</h3>
-                <ul class="space-y-3">
-                    <li>
-                        <a href="/blogs?category=All" class="block px-4 py-3 rounded-lg transition-all font-bold tracking-wider <%= currentCategory === 'All' ? 'bg-secondary text-primary shadow-neon' : 'text-slate-400 hover:bg-secondary/10 hover:text-secondary' %>">
-                            All
-                        </a>
-                    </li>
-                    <% categories.forEach(cat => { %>
-                    <li>
-                        <a href="/blogs?category=<%= encodeURIComponent(cat) %>" class="block px-4 py-3 rounded-lg transition-all font-bold tracking-wider <%= currentCategory === cat ? 'bg-secondary text-primary shadow-neon' : 'text-slate-400 hover:bg-secondary/10 hover:text-secondary' %>">
-                            <%= cat %>
-                        </a>
-                    </li>
-                    <% }) %>
-                </ul>
-            </div>
-            
-            <!-- Quick Promo Banner -->
-            <div class="mt-8 bg-gradient-to-br from-secondary/20 to-primary border border-secondary rounded-2xl p-6 text-center shadow-neon overflow-hidden relative group cursor-pointer sticky top-[450px]">
-                <div class="absolute inset-0 bg-secondary/10 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                <h4 class="text-white font-black text-2xl uppercase tracking-widest drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] mb-2">100% Bonus</h4>
-                <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-6 drop-shadow-[0_0_5px_rgba(0,245,255,0.8)]">On First Deposit</p>
-                <a href="#" class="inline-block border border-secondary text-secondary hover:bg-secondary hover:text-primary font-black py-2 px-6 rounded text-sm uppercase tracking-widest transition-all w-full relative z-10">Claim Now</a>
+            <div class="sticky top-28">
+                <div class="bg-accent/80 backdrop-blur-md rounded-2xl border border-secondary/20 p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                    <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Categories</h3>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="/blogs?category=All" class="block px-4 py-3 rounded-lg transition-all font-bold tracking-wider <%= currentCategory === 'All' ? 'bg-secondary text-primary shadow-neon' : 'text-slate-400 hover:bg-secondary/10 hover:text-secondary' %>">
+                                All
+                            </a>
+                        </li>
+                        <% categories.forEach(cat => { %>
+                        <li>
+                            <a href="/blogs?category=<%= encodeURIComponent(cat) %>" class="block px-4 py-3 rounded-lg transition-all font-bold tracking-wider <%= currentCategory === cat ? 'bg-secondary text-primary shadow-neon' : 'text-slate-400 hover:bg-secondary/10 hover:text-secondary' %>">
+                                <%= cat %>
+                            </a>
+                        </li>
+                        <% }) %>
+                    </ul>
+                </div>
+                
+                <!-- Quick Promo Banner -->
+                <div class="mt-8 bg-gradient-to-br from-secondary/20 to-primary border border-secondary rounded-2xl p-6 text-center shadow-neon overflow-hidden relative group cursor-pointer">
+                    <div class="absolute inset-0 bg-secondary/10 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <h4 class="text-white font-black text-2xl uppercase tracking-widest drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] mb-2">100% Bonus</h4>
+                    <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-6 drop-shadow-[0_0_5px_rgba(0,245,255,0.8)]">On First Deposit</p>
+                    <a href="#" class="inline-block border border-secondary text-secondary hover:bg-secondary hover:text-primary font-black py-2 px-6 rounded text-sm uppercase tracking-widest transition-all w-full relative z-10">Claim Now</a>
+                </div>
             </div>
         </div>
     </div>
