@@ -984,6 +984,14 @@ app.get('/admin', requireAuth, (req, res) => {
     });
 });
 
+// ADMIN: Rich Text Image Upload
+app.post('/admin/upload-image', requireAuth, upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No image uploaded' });
+    }
+    res.json({ url: '/uploads/' + req.file.filename });
+});
+
 // ADMIN: Blogs
 app.get('/admin/blogs', requireAuth, async (req, res) => {
     const editId = req.query.edit_id;

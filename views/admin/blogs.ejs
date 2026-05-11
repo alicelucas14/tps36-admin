@@ -85,19 +85,55 @@
 </div>
 
 <script>
+    function imageHandler() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch('/admin/upload-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (result.url) {
+                    const range = quill.getSelection(true);
+                    quill.insertEmbed(range.index, 'image', result.url);
+                } else {
+                    alert('Upload failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Image upload failed.');
+            }
+        };
+    }
+
     const quill = new Quill('#blog-editor', {
         theme: 'snow',
         modules: {
-            toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'header': [1, 2, 3, false] }],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['link'],
-                ['blockquote', 'code-block'],
-                ['clean']
-            ]
+            toolbar: {
+                container: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'header': [1, 2, 3, false] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image'],
+                    ['blockquote', 'code-block'],
+                    ['clean']
+                ],
+                handlers: {
+                    image: imageHandler
+                }
+            }
         },
-        placeholder: 'Write your blog content here... Select any text and click the 🔗 link icon in the toolbar to add a hyperlink.'
+        placeholder: 'Write your blog content here... Select any text and click the 🔗 link icon or image icon in the toolbar.'
     });
 
     // Pre-fill content when editing
