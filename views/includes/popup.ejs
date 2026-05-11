@@ -1,0 +1,116 @@
+<% if (typeof popupBanners !== 'undefined' && popupBanners.length > 0) { %>
+<div id="promoPopupOverlay" class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500 backdrop-blur-sm">
+    <div id="promoPopupModal" class="relative w-full max-w-lg bg-[#001328] rounded-2xl shadow-[0_0_50px_rgba(0,245,255,0.3)] border border-secondary/30 overflow-hidden scale-95 transition-transform duration-500">
+        
+        <!-- Close Button -->
+        <button id="promoPopupClose" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-red-500 transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- Carousel Container -->
+        <div class="relative w-full aspect-[4/3] overflow-hidden group">
+            <% popupBanners.forEach((banner, index) => { %>
+                <a href="<%= banner.link_url || '#' %>" class="promo-slide absolute inset-0 transition-opacity duration-1000 <%= index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none' %>">
+                    <img src="<%= banner.image_url %>" class="w-full h-full object-cover" alt="Promotion">
+                    <% if(banner.title) { %>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/80 to-transparent p-6 pt-16 pb-10 text-center">
+                            <h3 class="text-white text-2xl font-black tracking-wide drop-shadow-[0_0_10px_rgba(0,245,255,0.8)]"><%= banner.title %></h3>
+                        </div>
+                    <% } %>
+                </a>
+            <% }) %>
+
+            <% if (popupBanners.length > 1) { %>
+                <!-- Indicators -->
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
+                    <% popupBanners.forEach((banner, index) => { %>
+                        <button class="promo-indicator w-2.5 h-2.5 rounded-full transition-all <%= index === 0 ? 'bg-secondary scale-125 shadow-[0_0_5px_rgba(0,245,255,0.8)]' : 'bg-white/50 hover:bg-white' %>" data-index="<%= index %>"></button>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('promoPopupOverlay');
+    const modal = document.getElementById('promoPopupModal');
+    const closeBtn = document.getElementById('promoPopupClose');
+    const slides = document.querySelectorAll('.promo-slide');
+    const indicators = document.querySelectorAll('.promo-indicator');
+    
+    let currentSlide = 0;
+    let slideInterval;
+
+    const showSlide = (index) => {
+        slides.forEach(s => {
+            s.classList.remove('opacity-100', 'z-10');
+            s.classList.add('opacity-0', 'z-0', 'pointer-events-none');
+        });
+        indicators.forEach(i => {
+            i.classList.remove('bg-secondary', 'scale-125', 'shadow-[0_0_5px_rgba(0,245,255,0.8)]');
+            i.classList.add('bg-white/50');
+        });
+
+        slides[index].classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+        slides[index].classList.add('opacity-100', 'z-10');
+        
+        if(indicators[index]) {
+            indicators[index].classList.remove('bg-white/50');
+            indicators[index].classList.add('bg-secondary', 'scale-125', 'shadow-[0_0_5px_rgba(0,245,255,0.8)]');
+        }
+    };
+
+    const nextSlide = () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    };
+
+    const startCarousel = () => {
+        if (slides.length > 1) {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+    };
+
+    const stopCarousel = () => {
+        clearInterval(slideInterval);
+    };
+
+    // Close logic
+    const closePopup = () => {
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        modal.classList.remove('scale-100');
+        modal.classList.add('scale-95');
+        stopCarousel();
+    };
+
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closePopup();
+    });
+
+    // Indicator clicks
+    indicators.forEach(ind => {
+        ind.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            currentSlide = parseInt(ind.dataset.index);
+            showSlide(currentSlide);
+            stopCarousel();
+            startCarousel(); // reset timer
+        });
+    });
+
+    // Show popup with a slight delay
+    setTimeout(() => {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+        modal.classList.remove('scale-95');
+        modal.classList.add('scale-100');
+        startCarousel();
+    }, 1500);
+});
+</script>
+<% } %>

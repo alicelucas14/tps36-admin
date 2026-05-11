@@ -1,0 +1,45 @@
+<%- include('includes/header') %>
+
+<div class="max-w-4xl mx-auto px-4 py-20 lg:py-24 relative">
+    <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="text-center mb-16 relative z-10">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-wider uppercase text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">VIP Player <span class="text-secondary drop-shadow-[0_0_10px_rgba(0,245,255,0.5)]">Reviews</span></h1>
+        <div class="w-24 h-1 bg-secondary mx-auto shadow-neon"></div>
+    </div>
+    
+    <div class="space-y-8 relative z-10">
+        <% reviews.forEach(r => { %>
+        <div class="bg-accent/60 backdrop-blur-sm rounded-xl p-8 md:p-10 border border-secondary/10 shadow-[0_0_20px_rgba(0,0,0,0.5)] relative hover:border-secondary/50 hover:shadow-neon transition-all duration-300">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 blur-[30px] rounded-bl-full pointer-events-none"></div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div class="flex items-center gap-6">
+                    <% if(r.image_url) { %>
+                        <img src="<%= r.image_url %>" alt="<%= r.reviewer_name %>" class="w-16 h-16 rounded-full object-cover border border-secondary p-0.5 shadow-[0_0_10px_rgba(0,245,255,0.3)]" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/001c3d/00f5ff?text=User';">
+                    <% } else { %>
+                        <div class="w-16 h-16 rounded-full bg-primary border border-secondary p-0.5 flex items-center justify-center text-secondary font-black text-2xl shadow-[0_0_10px_rgba(0,245,255,0.3)]">
+                            <%= r.reviewer_name.charAt(0).toUpperCase() %>
+                        </div>
+                    <% } %>
+                    <div>
+                        <h3 class="text-xl font-bold text-white uppercase tracking-wider"><%= r.reviewer_name %></h3>
+                        <div class="text-secondary text-sm mt-2 drop-shadow-[0_0_5px_rgba(0,245,255,0.8)]">
+                            <% for(let i=0; i<r.rating; i++) { %><i class="fa-solid fa-star"></i><% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-slate-300 italic text-lg leading-relaxed border-l-2 border-secondary/30 pl-6">"<%= r.comment %>"</p>
+        </div>
+        <% }) %>
+        
+        <% if(reviews.length === 0) { %>
+            <div class="bg-accent/30 border border-dashed border-secondary/30 rounded-xl p-16 text-center">
+                <i class="fa-solid fa-star-half-stroke text-4xl text-slate-600 mb-4"></i>
+                <p class="text-slate-400 text-lg uppercase tracking-wider">No reviews yet. Be the first to leave a VIP review!</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('includes/footer') %>

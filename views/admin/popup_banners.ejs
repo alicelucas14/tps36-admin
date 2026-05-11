@@ -1,0 +1,98 @@
+<%- include('includes/header') %>
+
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Promotional Popups</h1>
+        <p class="text-gray-500 mt-1">Manage popup banners that appear to users on the homepage.</p>
+    </div>
+</div>
+
+<!-- Add New Popup Banner -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 border-l-4 border-l-blue-500">
+    <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-plus-circle text-blue-500 mr-2"></i> Add New Banner</h3>
+    <form action="/admin/popup-banners" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Image</label>
+                <input type="file" name="image" accept="image/*" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Title / Text (Optional)</label>
+                <input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 100% Welcome Bonus">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Destination URL (Optional)</label>
+                <input type="text" name="link_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. /promotions">
+            </div>
+        </div>
+        <div class="flex items-center gap-2 mt-4">
+            <input type="checkbox" name="is_active" id="is_active" value="1" checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+            <label for="is_active" class="text-sm font-medium text-gray-700">Set as Active</label>
+        </div>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition mt-4">Upload Banner</button>
+    </form>
+</div>
+
+<!-- Existing Banners -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2"><i class="fa-solid fa-images text-gray-500 mr-2"></i> Current Banners</h3>
+    
+    <% if(banners && banners.length > 0) { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% banners.forEach(item => { %>
+                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition bg-gray-50 flex flex-col relative">
+                    <div class="relative w-full h-48 bg-gray-200">
+                        <img src="<%= item.image_url %>" class="w-full h-full object-cover" alt="Banner Image">
+                        <% if(item.title) { %>
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8">
+                                <h4 class="text-white font-bold text-sm truncate drop-shadow-md"><%= item.title %></h4>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                    <div class="p-4 flex-1 flex flex-col">
+                        <div class="mb-4">
+                            <% if(item.link_url) { %>
+                                <p class="text-sm text-blue-600 font-medium truncate" title="<%= item.link_url %>"><i class="fa-solid fa-link mr-1"></i> <%= item.link_url %></p>
+                            <% } else { %>
+                                <p class="text-sm text-gray-400 italic">No link specified</p>
+                            <% } %>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-200">
+                            <!-- Toggle Status Form -->
+                            <form action="/admin/popup-banners/toggle/<%= item.id %>" method="POST" class="inline">
+                                <input type="hidden" name="is_active" value="<%= item.is_active ? '0' : '1' %>">
+                                <button type="submit" class="text-sm font-bold <%= item.is_active ? 'text-green-600' : 'text-gray-400' %> flex items-center gap-1">
+                                    <i class="fa-solid fa-circle text-[10px]"></i> <%= item.is_active ? 'Active' : 'Inactive' %>
+                                </button>
+                            </form>
+
+                            <div class="flex items-center gap-2">
+                                <!-- Edit Link -->
+                                <a href="/admin/popup-banners/edit/<%= item.id %>" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded transition text-sm font-bold">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+
+                                <!-- Delete Form -->
+                                <form action="/admin/popup-banners/delete/<%= item.id %>" method="POST" onsubmit="return confirm('Delete this banner permanently?');">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded transition text-sm font-bold">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+        <p class="text-xs text-gray-500 mt-4"><i class="fa-solid fa-circle-info"></i> Note: The homepage popup will automatically show the latest 3 active banners.</p>
+    <% } else { %>
+        <div class="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <i class="fa-solid fa-image text-3xl text-gray-400 mb-2 block"></i>
+            <p class="text-gray-500">No popup banners uploaded yet.</p>
+        </div>
+    <% } %>
+</div>
+
+<%- include('includes/footer') %>

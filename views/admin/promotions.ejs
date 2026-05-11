@@ -1,0 +1,75 @@
+<%- include('includes/header') %>
+
+<h2 class="text-2xl font-bold text-gray-800 mb-8"><i class="fa-solid fa-bullhorn text-orange-500 mr-2"></i> Manage Promotions</h2>
+
+<div class="flex justify-between items-center mb-6">
+    <p class="text-gray-500"><%= promotions.length %> promotion(s) total</p>
+    <a href="/admin/promotions/new" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition shadow-sm flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i> Add Promotion
+    </a>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+            <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                    <th class="px-6 py-4 font-semibold text-gray-600 uppercase text-xs">Banner</th>
+                    <th class="px-6 py-4 font-semibold text-gray-600 uppercase text-xs">Title</th>
+                    <th class="px-6 py-4 font-semibold text-gray-600 uppercase text-xs">Status</th>
+                    <th class="px-6 py-4 font-semibold text-gray-600 uppercase text-xs">Created</th>
+                    <th class="px-6 py-4 font-semibold text-gray-600 uppercase text-xs text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                <% promotions.forEach(p => { %>
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4">
+                        <% if(p.image_url) { %>
+                            <img src="<%= p.image_url %>" alt="<%= p.title %>" class="w-20 h-12 object-cover rounded-lg border border-gray-200">
+                        <% } else { %>
+                            <div class="w-20 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                        <% } %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-semibold text-gray-800"><%= p.title %></div>
+                        <% if(p.description) { %>
+                            <div class="text-xs text-gray-400 mt-1 max-w-xs truncate"><%= p.description %></div>
+                        <% } %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <% if(p.status === 'Active') { %>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Active</span>
+                        <% } else { %>
+                            <span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1 rounded-full">Inactive</span>
+                        <% } %>
+                    </td>
+                    <td class="px-6 py-4 text-gray-500 text-sm"><%= new Date(p.created_at).toLocaleDateString() %></td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="/admin/promotions/edit/<%= p.id %>" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium mr-4 transition">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i> Edit
+                        </a>
+                        <form action="/admin/promotions/delete/<%= p.id %>" method="POST" class="inline" onsubmit="return confirm('Delete this promotion?')">
+                            <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition">
+                                <i class="fa-solid fa-trash text-xs"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+                <% if(promotions.length === 0) { %>
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+                            <i class="fa-solid fa-bullhorn text-4xl mb-3 block"></i>
+                            No promotions yet. Create your first one!
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%- include('includes/footer') %>

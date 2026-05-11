@@ -1,0 +1,116 @@
+<%- include('includes/header') %>
+
+<!-- Quill Rich Text Editor -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Manage Blogs</h1>
+</div>
+
+<!-- Add Form -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h3 class="text-lg font-bold mb-4"><%= typeof editItem !== 'undefined' && editItem ? 'Edit Blog' : 'Add New Blog' %></h3>
+    <form method="POST" action="/admin/blogs" enctype="multipart/form-data" class="space-y-4" id="blog-form">
+        <% if(typeof editItem !== 'undefined' && editItem) { %>
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="id" value="<%= editItem.id %>">
+            <input type="hidden" name="existing_image" value="<%= editItem.image_url %>">
+        <% } %>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Title</label>
+                <input type="text" name="title" value="<%= typeof editItem !== 'undefined' && editItem ? editItem.title : '' %>" required class="w-full border rounded px-3 py-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Cover Image <% if(typeof editItem !== 'undefined' && editItem && editItem.image_url) { %><span class="text-xs text-blue-500 font-normal ml-2">(Current: <%= editItem.image_url %>)</span><% } %></label>
+                <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-1 bg-gray-50 focus:outline-none">
+                <% if(typeof editItem !== 'undefined' && editItem && editItem.image_url) { %>
+                    <p class="text-xs text-gray-400 mt-1">Replace empty to keep current.</p>
+                <% } %>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Category</label>
+                <select name="category" required class="w-full border rounded px-3 py-2 bg-white focus:outline-none">
+                    <% categories.forEach(cat => { %>
+                        <option value="<%= cat %>" <%= typeof editItem !== 'undefined' && editItem && editItem.category === cat ? 'selected' : '' %>><%= cat %></option>
+                    <% }) %>
+                </select>
+            </div>
+        </div>
+
+        <!-- Rich Text Editor -->
+        <div>
+            <label class="block text-sm font-medium mb-2">Content <span class="text-xs text-blue-500 font-normal">(Select text → click 🔗 in toolbar to add a hyperlink)</span></label>
+            <div id="blog-editor" style="min-height: 200px; background: white;" class="border rounded-lg"></div>
+            <input type="hidden" name="content" id="blog-content">
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded font-medium"><%= typeof editItem !== 'undefined' && editItem ? 'Update Blog' : 'Save Blog' %></button>
+            <% if(typeof editItem !== 'undefined' && editItem) { %>
+                <a href="/admin/blogs" class="text-gray-500 hover:text-gray-700 font-medium">Cancel Edit</a>
+            <% } %>
+        </div>
+    </form>
+</div>
+
+<!-- List -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-left">
+        <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Title</th>
+                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
+                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            <% blogs.forEach(blog => { %>
+            <tr>
+                <td class="px-6 py-4 font-medium"><%= blog.title %></td>
+                <td class="px-6 py-4"><span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full"><%= blog.status %></span></td>
+                <td class="px-6 py-4 text-right">
+                    <a href="/admin/blogs?edit_id=<%= blog.id %>" class="text-blue-500 hover:text-blue-700 mr-3"><i class="fa-solid fa-pen"></i></a>
+                    <form method="POST" action="/admin/blogs" class="inline">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="id" value="<%= blog.id %>">
+                        <button type="submit" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const quill = new Quill('#blog-editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'header': [1, 2, 3, false] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link'],
+                ['blockquote', 'code-block'],
+                ['clean']
+            ]
+        },
+        placeholder: 'Write your blog content here... Select any text and click the 🔗 link icon in the toolbar to add a hyperlink.'
+    });
+
+    // Pre-fill content when editing
+    <% if(typeof editItem !== 'undefined' && editItem && editItem.content) { %>
+        quill.root.innerHTML = `<%- typeof editItem !== 'undefined' && editItem ? editItem.content.replace(/`/g, '\\`') : '' %>`;
+    <% } %>
+
+    // On form submit, copy Quill HTML to hidden input
+    document.getElementById('blog-form').addEventListener('submit', function() {
+        document.getElementById('blog-content').value = quill.root.innerHTML;
+    });
+</script>
+
+<%- include('includes/footer') %>
+
+

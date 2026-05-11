@@ -1,0 +1,318 @@
+<!-- ===== LIVE CHAT WIDGET ===== -->
+<style>
+    #chat-window { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+    #chat-messages::-webkit-scrollbar { width:4px; }
+    #chat-messages::-webkit-scrollbar-thumb { background:rgba(0,245,255,0.3); border-radius:2px; }
+    .chat-msg-bot,.chat-msg-user { animation: msgIn 0.25s ease; }
+    @keyframes msgIn { from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);} }
+    .typing-dot { animation: typingB 1.2s infinite; background:#00f5ff; }
+    .typing-dot:nth-child(2){animation-delay:.2s;} .typing-dot:nth-child(3){animation-delay:.4s;}
+    @keyframes typingB{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-6px);opacity:1;}}
+</style>
+
+<!-- Floating Button -->
+<div id="chat-btn" class="fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-2" style="display:none!important">
+    <div id="chat-bubble-hint" class="bg-[#001c3d] text-white text-sm px-4 py-2 rounded-xl rounded-br-none shadow-lg border border-secondary/30" style="display:none">
+        Need help? Chat with us! 👋
+    </div>
+    <button onclick="chatToggle()" id="chat-toggle-btn"
+        class="w-16 h-16 rounded-full shadow-[0_0_25px_rgba(0,245,255,0.4)] flex items-center justify-center text-white text-2xl hover:scale-110 transition-all relative overflow-hidden bg-gradient-to-br from-blue-600 to-cyan-500">
+        <span id="chat-btn-avatar" class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-comments" id="chat-icon"></i></span>
+        <i class="fa-solid fa-xmark hidden absolute text-white text-xl" id="chat-close-icon"></i>
+        <span id="chat-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-bounce">1</span>
+    </button>
+</div>
+
+<!-- Chat Window -->
+<div id="chat-window" class="fixed bottom-28 right-6 z-[9998] w-[360px] bg-[#001328] rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9)] border border-secondary/30 flex-col overflow-hidden" style="display:none; max-height:530px;">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-[#001c3d] to-[#003060] px-4 py-3 flex items-center gap-3 border-b border-secondary/20">
+        <div class="w-10 h-10 rounded-full border border-secondary/30 flex items-center justify-center flex-shrink-0 overflow-hidden bg-secondary/20" id="chat-header-avatar">
+            <i class="fa-solid fa-robot text-secondary text-lg" id="chat-header-icon"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+            <div id="chat-bot-name-el" class="text-white font-bold text-sm truncate">Support Bot</div>
+            <div class="text-cyan-400 text-xs flex items-center gap-1.5" id="chat-status-el">
+                <span class="w-1.5 h-1.5 bg-green-400 rounded-full inline-block animate-pulse"></span> Online
+            </div>
+        </div>
+        <button onclick="chatToggle()" class="text-white/50 hover:text-white transition ml-2 flex-shrink-0"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3" style="min-height:280px;max-height:320px;"></div>
+
+    <!-- Quick Replies -->
+    <div id="quick-replies" class="px-4 pb-2 flex flex-wrap gap-2"></div>
+
+    <!-- Input -->
+    <div class="p-3 border-t border-white/10">
+        <!-- Image preview bar -->
+        <div id="img-preview-bar" class="hidden mb-2 flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
+            <img id="img-preview-thumb" src="" class="w-10 h-10 object-cover rounded-md flex-shrink-0" alt="">
+            <span class="text-white/60 text-xs flex-1 truncate" id="img-preview-name">image.png</span>
+            <button onclick="cancelImage()" class="text-red-400 hover:text-red-300 text-xs flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="flex gap-2">
+            <input type="file" id="chat-file-input" accept="image/*" class="hidden" onchange="handleImageSelect(this)">
+            <button onclick="document.getElementById('chat-file-input').click()"
+                class="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition flex-shrink-0" title="Send image">
+                <i class="fa-solid fa-image text-sm"></i>
+            </button>
+            <input type="text" id="chat-input" placeholder="Type your message..."
+                class="flex-1 bg-white/10 text-white placeholder-white/30 rounded-lg px-3 py-2 text-sm border border-white/10 focus:outline-none focus:border-secondary transition"
+                onkeydown="if(event.key==='Enter')chatSend()">
+            <button onclick="chatSend()" class="bg-secondary hover:bg-cyan-400 text-[#001328] font-bold w-10 h-10 rounded-lg flex items-center justify-center transition flex-shrink-0">
+                <i class="fa-solid fa-paper-plane text-sm"></i>
+            </button>
+        </div>
+    </div>
+    <div class="text-center pb-2 text-white/20 text-[10px]">Powered by Teen Patti Stars</div>
+</div>
+
+<script>
+(async function() {
+    // ── Load config ──────────────────────────────────────────
+    let cfg = null;
+    try { cfg = await (await fetch('/api/chat-data')).json(); } catch(e) { return; }
+    if (!cfg || !cfg.enabled) return;
+
+    // ── Show button ───────────────────────────────────────────
+    const btn = document.getElementById('chat-btn');
+    btn.style.cssText = 'display:flex!important;flex-direction:column;align-items:flex-end;gap:8px;position:fixed;bottom:24px;right:24px;z-index:9999;';
+
+    document.getElementById('chat-bot-name-el').textContent = cfg.botName;
+
+    // Apply avatar
+    if (cfg.avatar) {
+        const img = `<img src="${cfg.avatar}" class="w-full h-full object-cover" alt="Bot">`;
+        const ba = document.getElementById('chat-btn-avatar');
+        const ha = document.getElementById('chat-header-avatar');
+        if (ba) ba.innerHTML = img;
+        if (ha) ha.innerHTML = img;
+    }
+
+    // Hint bubble
+    setTimeout(() => {
+        const hint = document.getElementById('chat-bubble-hint');
+        if (!chatIsOpen && hint) hint.style.display = 'block';
+    }, 3000);
+
+    // ── Session ───────────────────────────────────────────────
+    let sessionId = localStorage.getItem('chat_session_id');
+    let sessionStatus = 'bot';
+    let chatIsOpen = false;
+    let greeted = false;
+    let sseSource = null;
+
+    const initSession = async () => {
+        const r = await fetch('/api/chat/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId })
+        });
+        const data = await r.json();
+        sessionId = data.sessionId;
+        sessionStatus = data.status;
+        localStorage.setItem('chat_session_id', sessionId);
+    };
+    await initSession();
+
+    // ── SSE ───────────────────────────────────────────────────
+    function connectSSE() {
+        if (sseSource) sseSource.close();
+        sseSource = new EventSource(`/api/chat/stream/${sessionId}`);
+        sseSource.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            if (data.type === 'connected') return;
+            if (data.sender === 'agent') {
+                addMsg(data.message, 'agent');
+                setStatus('agent');
+            }
+        };
+        sseSource.onerror = () => { setTimeout(connectSSE, 5000); };
+    }
+
+    // ── Image helpers ─────────────────────────────────────────
+    let pendingImage = null;
+
+    window.handleImageSelect = function(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        pendingImage = file;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('img-preview-thumb').src = e.target.result;
+            document.getElementById('img-preview-name').textContent = file.name;
+            document.getElementById('img-preview-bar').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    };
+
+    window.cancelImage = function() {
+        pendingImage = null;
+        document.getElementById('img-preview-bar').classList.add('hidden');
+        document.getElementById('chat-file-input').value = '';
+    };
+
+    async function uploadImage(file) {
+        const fd = new FormData();
+        fd.append('sessionId', sessionId);
+        fd.append('image', file);
+        showTyping();
+        try {
+            const r = await fetch('/api/chat/upload', { method: 'POST', body: fd });
+            hideTyping();
+            const d = await r.json();
+            if (d.url) addMsg(`[IMAGE:${d.url}]`, 'user');
+        } catch(e) { hideTyping(); addMsg('Failed to send image. Please try again.', 'bot'); }
+    }
+
+    // ── DOM helpers ───────────────────────────────────────────
+    function avatarHtml(type) {
+        if (cfg.avatar && type !== 'user') {
+            return `<img src="${cfg.avatar}" class="w-7 h-7 rounded-full object-cover flex-shrink-0 border border-secondary/30" alt="">`;
+        }
+        if (type === 'agent') {
+            return `<div class="w-7 h-7 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-headset text-blue-400 text-xs"></i></div>`;
+        }
+        return `<div class="w-7 h-7 rounded-full bg-secondary/20 border border-secondary/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-robot text-secondary text-xs"></i></div>`;
+    }
+
+    function addMsg(text, sender) {
+        const msgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+
+        // Detect image payload
+        const imgMatch = text.match(/^\[IMAGE:(.+?)\]$/);
+        let content;
+        if (imgMatch) {
+            const imgUrl = imgMatch[1];
+            content = `<a href="${imgUrl}" target="_blank"><img src="${imgUrl}" class="max-w-full rounded-xl border border-white/10 hover:opacity-90 transition cursor-pointer" style="max-height:180px;object-fit:cover;" alt="Image"></a>`;
+        } else {
+            content = escHtml(text);
+        }
+
+        if (sender === 'user') {
+            div.className = 'flex justify-end chat-msg-user';
+            div.innerHTML = `<div class="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl rounded-br-none px-4 py-2.5 text-sm text-white max-w-[80%] leading-relaxed">${content}</div>`;
+        } else {
+            const label = sender === 'agent' ? `<div class="text-[10px] text-blue-400 font-semibold mb-0.5">${cfg.agentName}</div>` : '';
+            div.className = 'flex items-end gap-2 chat-msg-bot';
+            div.innerHTML = `${avatarHtml(sender)}<div class="flex-1 max-w-[80%]">${label}<div class="bg-white/10 rounded-2xl rounded-bl-none px-4 py-2.5 text-sm text-white/90 leading-relaxed">${content}</div></div>`;
+        }
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function showTyping() {
+        const msgs = document.getElementById('chat-messages');
+        const t = document.createElement('div');
+        t.id = 'typing-ind'; t.className = 'flex items-end gap-2 chat-msg-bot';
+        t.innerHTML = `${avatarHtml('bot')}<div class="bg-white/10 rounded-2xl rounded-bl-none px-4 py-3 flex gap-1.5 items-center"><span class="typing-dot w-2 h-2 rounded-full"></span><span class="typing-dot w-2 h-2 rounded-full"></span><span class="typing-dot w-2 h-2 rounded-full"></span></div>`;
+        msgs.appendChild(t); msgs.scrollTop = msgs.scrollHeight;
+    }
+    function hideTyping() { const t = document.getElementById('typing-ind'); if (t) t.remove(); }
+
+    function showQR(opts) {
+        const qr = document.getElementById('quick-replies');
+        qr.innerHTML = '';
+        opts.forEach(o => {
+            const b = document.createElement('button');
+            b.className = 'text-xs text-secondary border border-secondary/30 hover:bg-secondary/10 rounded-full px-3 py-1.5 transition';
+            b.textContent = o;
+            b.onclick = () => { qr.innerHTML = ''; addMsg(o, 'user'); doSend(o); };
+            qr.appendChild(b);
+        });
+    }
+
+    function setStatus(mode) {
+        sessionStatus = mode;
+        const el = document.getElementById('chat-status-el');
+        if (mode === 'agent') {
+            el.innerHTML = `<span class="w-1.5 h-1.5 bg-blue-400 rounded-full inline-block animate-pulse"></span> ${cfg.agentName} connected`;
+        }
+    }
+
+    function escHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+    // ── Send message ──────────────────────────────────────────
+    async function doSend(text) {
+        document.getElementById('quick-replies').innerHTML = '';
+        showTyping();
+        try {
+            const r = await fetch('/api/chat/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId, message: text })
+            });
+            const data = await r.json();
+            hideTyping();
+            if (data.type === 'bot') {
+                addMsg(data.message, 'bot');
+                if (data.escalated) {
+                    setStatus('agent');
+                } else {
+                    setTimeout(() => showQR(['More questions', 'Talk to Agent']), 400);
+                }
+            }
+            // type === 'forwarded' means agent mode, no bot response — just wait
+        } catch(e) { hideTyping(); addMsg('Connection error. Please try again.', 'bot'); }
+    }
+
+    window.chatSend = function() {
+        // Send pending image first
+        if (pendingImage) {
+            const file = pendingImage;
+            cancelImage();
+            uploadImage(file);
+            return;
+        }
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        addMsg(text, 'user');
+        input.value = '';
+        doSend(text);
+    };
+
+    // ── Toggle ────────────────────────────────────────────────
+    window.chatToggle = function() {
+        chatIsOpen = !chatIsOpen;
+        const win = document.getElementById('chat-window');
+        const icon = document.getElementById('chat-icon');
+        const closeIcon = document.getElementById('chat-close-icon');
+        const badge = document.getElementById('chat-badge');
+        const hint = document.getElementById('chat-bubble-hint');
+
+        if (chatIsOpen) {
+            win.style.display = 'flex'; win.style.flexDirection = 'column';
+            icon.classList.add('hidden'); closeIcon.classList.remove('hidden');
+            badge.classList.add('hidden'); if (hint) hint.style.display = 'none';
+            connectSSE();
+            if (!greeted) {
+                greeted = true;
+                setTimeout(() => {
+                    showTyping();
+                    setTimeout(() => {
+                        hideTyping();
+                        addMsg(cfg.welcomeMessage, 'bot');
+                        setTimeout(() => showQR(['How to deposit?', 'How to withdraw?', 'Bonuses', 'Talk to Agent']), 400);
+                    }, 1000);
+                }, 400);
+            }
+        } else {
+            win.style.display = 'none';
+            icon.classList.remove('hidden'); closeIcon.classList.add('hidden');
+        }
+    };
+
+    // Mobile size
+    function adjustSize() {
+        const w = document.getElementById('chat-window');
+        if (window.innerWidth < 640) { w.style.width='calc(100vw - 24px)'; w.style.right='12px'; w.style.bottom='90px'; }
+        else { w.style.width='360px'; w.style.right='24px'; w.style.bottom='112px'; }
+    }
+    window.addEventListener('resize', adjustSize); adjustSize();
+})();
+</script>

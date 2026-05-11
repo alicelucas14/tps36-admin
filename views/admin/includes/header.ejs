@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Admin — Teen Patti Stars</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#0a0f1e', secondary: '#fbbf24', bg_light: '#f1f5f9' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link { display:flex; align-items:center; gap:10px; padding:9px 14px; border-radius:8px; font-size:13.5px; font-weight:500; color:#94a3b8; transition:all .15s ease; cursor:pointer; text-decoration:none; }
+        .sidebar-link:hover { background:rgba(255,255,255,0.06); color:#e2e8f0; }
+        .sidebar-link.active { background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; box-shadow:0 4px 12px rgba(37,99,235,0.3); }
+        .sidebar-link.active i { opacity:1; }
+        .sidebar-link i { width:16px; text-align:center; font-size:13px; opacity:0.7; }
+        .sidebar-link.active i { opacity:1; }
+        .section-label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#475569; padding:0 14px; margin:20px 0 6px; }
+        nav::-webkit-scrollbar { width:3px; }
+        nav::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:3px; }
+    </style>
+</head>
+<body class="bg-bg_light text-gray-800 flex h-screen overflow-hidden" style="font-family:'Inter',sans-serif;">
+
+<%
+function isActive(p) {
+    if (typeof path === 'undefined') return false;
+    return path === p || (p !== '/admin' && path.startsWith(p));
+}
+%>
+
+<!-- Sidebar -->
+<aside class="w-60 flex-shrink-0 flex flex-col hidden md:flex" style="background:#0a0f1e; border-right:1px solid rgba(255,255,255,0.06);">
+    
+    <!-- Logo -->
+    <div class="flex items-center gap-3 px-5 h-16 border-b" style="border-color:rgba(255,255,255,0.07);">
+        <img src="/images/Teen-Patti-Stars-Logo.webp" alt="Teen Patti Stars" class="h-8 w-auto">
+        <div>
+            <div class="text-white font-bold text-sm leading-tight">Teen Patti</div>
+            <div class="text-yellow-400 font-bold text-xs leading-tight tracking-wider uppercase">Stars Admin</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto py-4 px-3">
+
+        <!-- Overview -->
+        <div class="section-label">Overview</div>
+        <a href="/admin" class="sidebar-link <%= isActive('/admin') ? 'active' : '' %>">
+            <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </a>
+
+        <!-- Content -->
+        <div class="section-label">Content</div>
+        <a href="/admin/blogs" class="sidebar-link <%= isActive('/admin/blogs') ? 'active' : '' %>">
+            <i class="fa-solid fa-pen-nib"></i> Blogs
+        </a>
+        <a href="/admin/reviews" class="sidebar-link <%= isActive('/admin/reviews') ? 'active' : '' %>">
+            <i class="fa-solid fa-star"></i> Reviews
+        </a>
+        <a href="/admin/faq" class="sidebar-link <%= isActive('/admin/faq') ? 'active' : '' %>">
+            <i class="fa-solid fa-circle-question"></i> FAQ
+        </a>
+        <a href="/admin/categories" class="sidebar-link <%= isActive('/admin/categories') ? 'active' : '' %>">
+            <i class="fa-solid fa-layer-group"></i> Categories
+        </a>
+
+        <!-- Pages -->
+        <div class="section-label">Pages</div>
+        <a href="/admin/home-accordions" class="sidebar-link <%= isActive('/admin/home-accordions') ? 'active' : '' %>">
+            <i class="fa-solid fa-list-ul"></i> Home Accordions
+        </a>
+        <a href="/admin/contact-page" class="sidebar-link <%= isActive('/admin/contact-page') ? 'active' : '' %>">
+            <i class="fa-solid fa-address-book"></i> Contact Page
+        </a>
+        <a href="/admin/popup-banners" class="sidebar-link <%= isActive('/admin/popup-banners') ? 'active' : '' %>">
+            <i class="fa-solid fa-rectangle-ad"></i> Popup Banners
+        </a>
+
+        <!-- Inbox -->
+        <div class="section-label">Inbox</div>
+        <a href="/admin/contacts" class="sidebar-link <%= isActive('/admin/contacts') ? 'active' : '' %>">
+            <i class="fa-solid fa-envelope"></i> Contact Messages
+        </a>
+
+        <!-- Settings -->
+        <div class="section-label">Configuration</div>
+        <a href="/admin/settings" class="sidebar-link <%= isActive('/admin/settings') ? 'active' : '' %>">
+            <i class="fa-solid fa-gear"></i> Site Settings
+        </a>
+        <a href="/admin/seo" class="sidebar-link <%= isActive('/admin/seo') ? 'active' : '' %>">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> SEO Manager
+        </a>
+        <a href="/admin/chat" class="sidebar-link <%= isActive('/admin/chat') ? 'active' : '' %>">
+            <i class="fa-solid fa-comments"></i> Live Chat
+        </a>
+        <% if (locals.isSuperAdmin) { %>
+        <a href="/admin/users" class="sidebar-link <%= isActive('/admin/users') ? 'active' : '' %>">
+            <i class="fa-solid fa-users-gear"></i> User Management
+        </a>
+        <% } %>
+
+    </nav>
+
+    <!-- User Footer -->
+    <div class="px-3 py-4 border-t" style="border-color:rgba(255,255,255,0.07);">
+        <a href="/" target="_blank" class="sidebar-link mb-1">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Site
+        </a>
+        <a href="/admin/logout" class="sidebar-link" style="color:#f87171;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+
+</aside>
+
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Bar -->
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow-sm flex-shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full bg-green-400"></div>
+            <span class="text-sm font-medium text-gray-500">System Online</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/" target="_blank" class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-semibold text-gray-600 transition">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Live Site
+            </a>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-sm shadow">A</div>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-8 relative break-words w-full h-full">

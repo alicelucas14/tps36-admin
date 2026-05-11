@@ -1,0 +1,89 @@
+<%- include('includes/header') %>
+
+<div class="max-w-7xl mx-auto px-4 py-20 lg:py-24 relative">
+    <!-- Background Glow Elements -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        <div class="lg:col-span-3 relative z-10">
+            
+            <article class="bg-accent/80 backdrop-blur-md rounded-2xl border border-secondary/20 overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.6)]">
+                <% if(blog.image_url) { %>
+                    <div class="w-full h-[300px] md:h-[450px] relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-accent/90 to-transparent z-10"></div>
+                        <img src="<%= blog.image_url %>" alt="Cover" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=1200&auto=format&fit=crop';">
+                        
+                        <div class="absolute bottom-8 left-8 right-8 z-20">
+                            <span class="bg-secondary/20 border border-secondary text-secondary px-4 py-1 rounded-full font-bold text-xs tracking-widest uppercase shadow-neon mb-4 inline-block"><%= blog.category || 'General' %></span>
+                            <h1 class="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.8)]"><%= blog.title %></h1>
+                            <div class="mt-4 text-slate-400 font-medium tracking-wide text-sm flex items-center gap-4">
+                                <span><i class="fa-regular fa-calendar-days text-secondary"></i> <%= new Date(blog.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                            </div>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="p-8 md:p-12 border-b border-secondary/20 bg-primary">
+                        <span class="bg-secondary/20 border border-secondary text-secondary px-4 py-1 rounded-full font-bold text-xs tracking-widest uppercase shadow-neon mb-4 inline-block"><%= blog.category || 'General' %></span>
+                        <h1 class="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]"><%= blog.title %></h1>
+                        <div class="mt-4 text-slate-400 font-medium tracking-wide text-sm flex items-center gap-4">
+                            <span><i class="fa-regular fa-calendar-days text-secondary"></i> <%= new Date(blog.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                        </div>
+                    </div>
+                <% } %>
+                
+                <div class="p-8 md:p-12">
+                    <div class="prose prose-invert prose-lg max-w-none text-slate-300 leading-relaxed font-medium 
+                                prose-headings:text-white prose-headings:font-black prose-headings:tracking-wide
+                                prose-a:text-secondary prose-a:font-bold prose-a:no-underline hover:prose-a:underline hover:prose-a:text-white hover:prose-a:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all
+                                prose-strong:text-white prose-strong:font-bold">
+                        <%- blog.content %>
+                    </div>
+                    
+                    <% if(blog.external_link && blog.link_text) { %>
+                        <div class="mt-12 pt-8 border-t border-secondary/20 text-center">
+                            <a href="<%= blog.external_link %>" target="_blank" class="inline-block bg-secondary text-primary font-black py-4 px-10 rounded shadow-neon tracking-widest uppercase hover:bg-white transition-all transform hover:scale-105"><%= blog.link_text %></a>
+                        </div>
+                    <% } else if(blog.external_link) { %>
+                        <div class="mt-12 pt-8 border-t border-secondary/20 text-center">
+                            <a href="<%= blog.external_link %>" target="_blank" class="inline-block bg-secondary text-primary font-black py-4 px-10 rounded shadow-neon tracking-widest uppercase hover:bg-white transition-all transform hover:scale-105">Play Now</a>
+                        </div>
+                    <% } %>
+                </div>
+            </article>
+            
+            <div class="mt-8 flex items-center justify-between">
+                <a href="/blogs" class="flex items-center gap-2 text-slate-400 hover:text-secondary font-bold tracking-widest uppercase text-sm transition-all"><i class="fa-solid fa-arrow-left"></i> Back to News</a>
+            </div>
+        </div>
+        
+        <div class="lg:col-span-1 relative z-10">
+            <div class="bg-accent/80 backdrop-blur-md rounded-2xl border border-secondary/20 p-8 sticky top-28 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Categories</h3>
+                <ul class="space-y-3">
+                    <li>
+                        <a href="/blogs?category=All" class="block px-4 py-3 rounded-lg transition-all font-bold tracking-wider <%= currentCategory === 'All' ? 'bg-secondary text-primary shadow-neon' : 'text-slate-400 hover:bg-secondary/10 hover:text-secondary' %>">
+                            All
+                        </a>
+                    </li>
+                    <% categories.forEach(cat => { %>
+                    <li>
+                        <a href="/blogs?category=<%= encodeURIComponent(cat) %>" class="block px-4 py-3 rounded-lg transition-all font-bold tracking-wider <%= currentCategory === cat ? 'bg-secondary text-primary shadow-neon' : 'text-slate-400 hover:bg-secondary/10 hover:text-secondary' %>">
+                            <%= cat %>
+                        </a>
+                    </li>
+                    <% }) %>
+                </ul>
+            </div>
+            
+            <!-- Quick Promo Banner -->
+            <div class="mt-8 bg-gradient-to-br from-secondary/20 to-primary border border-secondary rounded-2xl p-6 text-center shadow-neon overflow-hidden relative group cursor-pointer sticky top-[450px]">
+                <div class="absolute inset-0 bg-secondary/10 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                <h4 class="text-white font-black text-2xl uppercase tracking-widest drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] mb-2">100% Bonus</h4>
+                <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-6 drop-shadow-[0_0_5px_rgba(0,245,255,0.8)]">On First Deposit</p>
+                <a href="#" class="inline-block border border-secondary text-secondary hover:bg-secondary hover:text-primary font-black py-2 px-6 rounded text-sm uppercase tracking-widest transition-all w-full relative z-10">Claim Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('includes/footer') %>

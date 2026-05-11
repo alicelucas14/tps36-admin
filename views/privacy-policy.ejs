@@ -1,0 +1,50 @@
+<%- include('includes/header') %>
+
+<div class="max-w-4xl mx-auto px-4 py-16 relative">
+
+    <!-- Title -->
+    <div class="flex items-center gap-3 mb-10">
+        <div class="text-secondary text-3xl">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h1 class="text-4xl font-black text-white tracking-wide">Privacy <span class="text-[#FFF200]">Policy</span> — <span class="text-[#FFF200]">Teen Patti Stars</span></h1>
+    </div>
+
+    <!-- Last Updated Badge -->
+    <div class="mb-8">
+        <span class="bg-secondary/10 border border-secondary/30 text-secondary text-xs font-bold px-4 py-2 rounded-full">
+            <i class="fa-solid fa-clock mr-1"></i> Last Updated: <%= new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+        </span>
+    </div>
+
+    <!-- Policy Content Card -->
+    <style>
+        .policy-content h1, .policy-content h2 { color: #FFF200 !important; }
+        .policy-content h3, .policy-content strong { color: #FFF200 !important; }
+    </style>
+    <div class="bg-[#03305c] rounded-2xl border border-blue-800/50 shadow-lg overflow-hidden">
+        <div class="policy-content p-8 md:p-12 prose prose-invert max-w-none
+            [&_h2]:text-2xl [&_h2]:font-black [&_h2]:text-[#FFF200] [&_h2]:drop-shadow-[0_0_10px_rgba(255,242,0,0.7)] [&_h2]:mb-4 [&_h2]:mt-0
+            [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-[#FFF200] [&_h3]:mt-8 [&_h3]:mb-3
+            [&_p]:text-gray-300 [&_p]:leading-relaxed [&_p]:mb-4
+            [&_ul]:text-gray-300 [&_ul]:space-y-2 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6
+            [&_ol]:text-gray-300 [&_ol]:space-y-2 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6
+            [&_strong]:text-white [&_a]:text-secondary [&_a:hover]:underline">
+            <%- settings['privacy_policy'] || '<p>Privacy policy content has not been set yet. Please update it in the admin settings.</p>' %>
+        </div>
+    </div>
+
+    <!-- Back / Contact Section -->
+    <div class="mt-10 flex flex-col sm:flex-row gap-4 items-center">
+        <a href="/" class="flex items-center gap-2 text-gray-400 hover:text-secondary transition-colors text-sm font-semibold">
+            <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+        <span class="text-gray-600 hidden sm:block">|</span>
+        <a href="/contact" class="flex items-center gap-2 text-gray-400 hover:text-secondary transition-colors text-sm font-semibold">
+            <i class="fa-solid fa-headset"></i> Have questions? Contact Support
+        </a>
+    </div>
+
+</div>
+
+<%- include('includes/footer') %>

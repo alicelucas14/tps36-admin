@@ -1,0 +1,52 @@
+<%- include('includes/header') %>
+
+<div class="flex items-center gap-4 mb-8">
+    <a href="/admin/popup-banners" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-arrow-left"></i></a>
+    <h2 class="text-2xl font-bold text-gray-800">Edit Popup Banner</h2>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-3xl border-t-4 border-t-blue-500">
+    <form action="/admin/popup-banners/edit/<%= banner.id %>" method="POST" enctype="multipart/form-data" class="space-y-6">
+        
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Title / Text (Optional)</label>
+            <input type="text" name="title" value="<%= banner.title || '' %>"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800"
+                placeholder="e.g. 100% Welcome Bonus">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Destination URL (Optional)</label>
+            <input type="text" name="link_url" value="<%= banner.link_url || '' %>"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800"
+                placeholder="e.g. /promotions or https://google.com">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Banner Image</label>
+            <% if(banner.image_url) { %>
+                <div class="mb-4">
+                    <img src="<%= banner.image_url %>" alt="Current banner" class="h-48 rounded-xl border border-gray-200 object-cover bg-gray-200">
+                    <input type="hidden" name="existing_image" value="<%= banner.image_url %>">
+                </div>
+            <% } %>
+            <input type="file" name="image" accept="image/*"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            <p class="text-xs text-gray-400 mt-1">Leave empty to keep the current image.</p>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+            <input type="checkbox" name="is_active" id="is_active" value="1" <%= banner.is_active ? 'checked' : '' %> class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
+            <label for="is_active" class="text-sm font-medium text-gray-700 cursor-pointer">Set as Active (Will appear in the homepage carousel)</label>
+        </div>
+
+        <div class="flex items-center gap-4 pt-6 border-t border-gray-100">
+            <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm">
+                <i class="fa-solid fa-save mr-2"></i> Save Changes
+            </button>
+            <a href="/admin/popup-banners" class="px-6 py-3 rounded-xl font-medium text-gray-500 hover:bg-gray-100 transition">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<%- include('includes/footer') %>

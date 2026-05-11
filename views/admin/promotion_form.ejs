@@ -1,0 +1,75 @@
+<%- include('includes/header') %>
+
+<div class="flex items-center gap-4 mb-8">
+    <a href="/admin/promotions" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-arrow-left"></i></a>
+    <h2 class="text-2xl font-bold text-gray-800"><%= promotion ? 'Edit Promotion' : 'New Promotion' %></h2>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-3xl">
+    <form action="<%= promotion ? '/admin/promotions/edit/' + promotion.id : '/admin/promotions/new' %>" method="POST" enctype="multipart/form-data" class="space-y-6">
+        
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Promotion Title *</label>
+            <input type="text" name="title" value="<%= promotion ? promotion.title : '' %>" required
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800"
+                placeholder="e.g. Welcome Bonus - Get 100% Cashback">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+            <textarea name="description" rows="4"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800 resize-none"
+                placeholder="Describe the promotion details..."><%= promotion ? promotion.description : '' %></textarea>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Banner Image</label>
+            <% if(promotion && promotion.image_url) { %>
+                <div class="mb-3">
+                    <img src="<%= promotion.image_url %>" alt="Current banner" class="h-32 rounded-xl border border-gray-200 object-cover">
+                    <input type="hidden" name="existing_image" value="<%= promotion.image_url %>">
+                </div>
+            <% } %>
+            <input type="file" name="image" accept="image/*"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            <p class="text-xs text-gray-400 mt-1">Upload a banner image (recommended: 1200x600px)</p>
+        </div>
+
+        <div class="border border-green-100 rounded-xl p-5 bg-green-50">
+            <p class="text-xs font-bold text-green-700 uppercase tracking-wider mb-3"><i class="fa-solid fa-link mr-1"></i> External Link (SEO)</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Anchor Text <span class="text-xs text-gray-400 font-normal">(the clickable word/phrase)</span></label>
+                    <input type="text" name="link_text" value="<%= promotion ? (promotion.link_text || '') : '' %>"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-400 text-gray-800"
+                        placeholder="e.g. Claim your bonus now">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Destination URL <span class="text-xs text-gray-400 font-normal">(where it redirects)</span></label>
+                    <input type="url" name="external_link" value="<%= promotion ? (promotion.external_link || '') : '' %>"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-400 text-gray-800"
+                        placeholder="https://partner-site.com/terms">
+                </div>
+            </div>
+            <p class="text-xs text-green-600 mt-2"><i class="fa-solid fa-circle-info mr-1"></i> Customers clicking the anchor text on the promotion card will be redirected to this URL.</p>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+            <select name="status"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition outline-none text-gray-800 bg-white">
+                <option value="Active" <%= promotion && promotion.status === 'Active' ? 'selected' : '' %>>Active</option>
+                <option value="Inactive" <%= promotion && promotion.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+            </select>
+        </div>
+
+        <div class="flex items-center gap-4 pt-4">
+            <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm">
+                <i class="fa-solid fa-check mr-2"></i> <%= promotion ? 'Update Promotion' : 'Create Promotion' %>
+            </button>
+            <a href="/admin/promotions" class="px-6 py-3 rounded-xl font-medium text-gray-500 hover:bg-gray-100 transition">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<%- include('includes/footer') %>

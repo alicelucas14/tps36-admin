@@ -1,0 +1,77 @@
+<%- include('includes/header') %>
+
+<div class="bg-primary min-h-screen py-20 lg:py-24 relative overflow-hidden">
+    <!-- Background Glow Elements -->
+    <div class="absolute top-20 right-10 w-[500px] h-[500px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+        
+        <!-- Page Header -->
+        <div class="text-center mb-16">
+            <span class="inline-block bg-secondary/10 border border-secondary/30 text-secondary text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase shadow-neon"><i class="fa-solid fa-gift mr-1"></i> VIP Offers</span>
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-6 tracking-wider uppercase drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">Current <span class="text-secondary drop-shadow-[0_0_10px_rgba(0,245,255,0.5)]">Promotions</span></h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg font-medium leading-relaxed">Don't miss out on our latest deals, exclusive bonuses, and high-roller rewards. Claim them before they expire!</p>
+        </div>
+
+        <% if (promotions.length === 0) { %>
+            <div class="text-center py-20 bg-accent/30 border border-dashed border-secondary/30 rounded-2xl p-16 max-w-3xl mx-auto">
+                <i class="fa-solid fa-gift text-6xl text-slate-600 mb-6 block"></i>
+                <h3 class="text-2xl font-bold text-slate-400 mb-2 uppercase tracking-widest">No Active Promotions</h3>
+                <p class="text-slate-500">Check back soon for exciting new VIP offers!</p>
+            </div>
+        <% } else { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <% promotions.forEach(promo => { %>
+                    <div class="bg-accent/60 backdrop-blur-md rounded-2xl overflow-hidden border border-secondary/20 hover:border-secondary transition-all duration-500 group hover:-translate-y-2 hover:shadow-neon flex flex-col h-full relative">
+                        <% if(promo.image_url) { %>
+                            <div class="relative overflow-hidden h-52">
+                                <img src="<%= promo.image_url %>" alt="<%= promo.title %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-accent to-transparent/20 opacity-80"></div>
+                                <span class="absolute top-4 right-4 bg-secondary text-primary text-xs font-black tracking-widest uppercase px-3 py-1 rounded shadow-neon">LIVE</span>
+                            </div>
+                        <% } else { %>
+                            <div class="h-52 bg-gradient-to-br from-primary to-accent border-b border-secondary/20 flex items-center justify-center relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                                <i class="fa-solid fa-bullhorn text-6xl text-secondary/30 drop-shadow-[0_0_15px_rgba(0,245,255,0.5)]"></i>
+                                <span class="absolute top-4 right-4 bg-secondary text-primary text-xs font-black tracking-widest uppercase px-3 py-1 rounded shadow-neon z-10">LIVE</span>
+                            </div>
+                        <% } %>
+                        
+                        <div class="p-8 flex-1 flex flex-col">
+                            <h3 class="text-2xl font-black text-white mb-4 group-hover:text-secondary transition-colors uppercase tracking-wider leading-tight"><%= promo.title %></h3>
+                            <% if(promo.description) { %>
+                                <p class="text-slate-400 text-sm mb-6 line-clamp-3 leading-relaxed"><%= promo.description %></p>
+                            <% } %>
+                            
+                            <div class="mt-auto pt-6 border-t border-secondary/10 space-y-4">
+                                <% if(promo.link) { %>
+                                    <a href="<%= promo.link %>" class="flex items-center justify-center gap-2 bg-secondary text-primary px-5 py-3 rounded font-black text-sm uppercase tracking-widest hover:bg-white hover:text-primary transition-all transform hover:scale-[1.02] shadow-neon w-full">
+                                        Claim Offer <i class="fa-solid fa-arrow-right text-xs"></i>
+                                    </a>
+                                <% } %>
+                                
+                                <% if(promo.external_link && promo.link_text) { %>
+                                    <a href="<%= promo.external_link %>" target="_blank" rel="nofollow noopener noreferrer"
+                                        class="flex items-center justify-center gap-2 border border-secondary text-secondary hover:bg-secondary hover:text-primary px-5 py-3 rounded font-black text-sm uppercase tracking-widest transition-all w-full">
+                                        <%= promo.link_text %> <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    </a>
+                                <% } else if(promo.external_link) { %>
+                                    <a href="<%= promo.external_link %>" target="_blank" rel="nofollow noopener noreferrer"
+                                        class="flex items-center justify-center gap-2 border border-secondary text-secondary hover:bg-secondary hover:text-primary px-5 py-3 rounded font-black text-sm uppercase tracking-widest transition-all w-full">
+                                        Learn More <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                    </a>
+                                <% } %>
+                                
+                                <div class="text-center pt-2">
+                                    <span class="text-xs text-slate-500 font-bold uppercase tracking-widest">Added: <%= new Date(promo.created_at).toLocaleDateString() %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('includes/footer') %>

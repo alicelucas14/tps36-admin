@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + settings['site_name'] : (settings['seo_home_title'] || settings['site_name'] + ' - Premium Gaming') %></title>
+    <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (settings['seo_home_description'] || 'Play skill-based games on ' + settings['site_name'] + ' with secure payments, instant withdrawals, and VIP support.') %>">
+    <meta name="keywords" content="<%= settings['seo_default_keywords'] || settings['site_name'] + ', Teen Patti, Rummy, online gaming' %>">
+    <meta name="robots" content="<%= settings['seo_robots'] || 'index, follow' %>">
+    <% if (settings['seo_base_url']) { %><link rel="canonical" href="<%= settings['seo_base_url'] %>"><% } %>
+    <% if (settings['seo_google_verification']) { %><meta name="google-site-verification" content="<%= settings['seo_google_verification'] %>"><% } %>
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + settings['site_name'] : (settings['seo_home_title'] || settings['site_name']) %>">
+    <meta property="og:description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (settings['seo_home_description'] || 'Join VIP players on ' + settings['site_name'] + '. Download the app for exclusive bonuses!') %>">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="<%= settings['seo_og_image'] || '/images/Teen-Patti-Stars-Logo.webp' %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + settings['site_name'] : settings['site_name'] %>">
+    <meta name="twitter:image" content="<%= settings['seo_og_image'] || '/images/Teen-Patti-Stars-Logo.webp' %>">
+    <link rel="icon" type="image/webp" href="/images/Teen-Patti-Stars-Logo.webp">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#001328', secondary: '#00f5ff', accent: '#001c3d' },
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
+                    boxShadow: { 'neon': '0 0 10px rgba(0, 245, 255, 0.5), 0 0 20px rgba(0, 245, 255, 0.3)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+    </style>
+    <% if (settings['seo_google_analytics']) { %>
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= settings['seo_google_analytics'] %>"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= settings["seo_google_analytics"] %>');</script>
+    <% } %>
+    <% if (settings['seo_facebook_pixel']) { %>
+    <!-- Facebook Pixel -->
+    <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','<%= settings["seo_facebook_pixel"] %>');fbq('track','PageView');</script>
+    <% } %>
+</head>
+<body class="bg-primary text-white flex flex-col min-h-screen">
+    <nav class="fixed w-full top-0 z-50 bg-accent/80 backdrop-blur-md border-b border-secondary/20 shadow-neon">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-24">
+                <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <img src="/images/Teen-Patti-Stars-Logo.webp" alt="Teen Patti Stars" class="h-12 md:h-16 w-auto drop-shadow-[0_0_8px_rgba(0,245,255,0.5)]">
+                    <span class="text-xl md:text-2xl font-black text-white tracking-wider uppercase hidden sm:block">TEEN PATTI <span class="text-secondary drop-shadow-[0_0_8px_rgba(0,245,255,0.8)]">STARS</span></span>
+                </a>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-8 text-sm font-bold text-gray-300 uppercase tracking-widest">
+                    <a href="/" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">Home</a>
+                    
+                    <!-- Pages Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 hover:text-secondary transition-all">
+                            Pages <i class="fa-solid fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-accent/95 backdrop-blur-xl border border-secondary/30 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.8)] p-2 min-w-[200px]">
+                                <a href="/blogs" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary/10 hover:text-secondary transition-colors">
+                                    <i class="fa-solid fa-pen-nib text-secondary w-4"></i> Blogs
+                                </a>
+                                <a href="/reviews" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary/10 hover:text-secondary transition-colors">
+                                    <i class="fa-solid fa-star text-secondary w-4"></i> Reviews
+                                </a>
+                                <a href="/faq" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary/10 hover:text-secondary transition-colors">
+                                    <i class="fa-solid fa-circle-question text-secondary w-4"></i> FAQ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="/#about-us" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">About</a>
+                    <a href="/contact" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">Contact</a>
+                    <a href="#" class="bg-secondary text-primary px-8 py-3 rounded-full font-black hover:bg-white hover:text-primary transition-all transform hover:scale-105 ml-4 shadow-neon tracking-wider">PLAY NOW</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-secondary focus:outline-none text-3xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-secondary/20 px-4 py-6 space-y-6">
+            <a href="/" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors text-center">Home</a>
+            <div>
+                <button onclick="document.getElementById('mobile-pages').classList.toggle('hidden')" class="flex justify-center w-full text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors">
+                    Pages <i class="fa-solid fa-chevron-down text-[10px] ml-2 mt-1"></i>
+                </button>
+                <div id="mobile-pages" class="hidden mt-4 space-y-4 text-center">
+                    <a href="/blogs" class="block text-gray-400 hover:text-secondary transition-colors">Blogs</a>
+                    <a href="/reviews" class="block text-gray-400 hover:text-secondary transition-colors">Reviews</a>
+                    <a href="/faq" class="block text-gray-400 hover:text-secondary transition-colors">FAQ</a>
+                </div>
+            </div>
+            <a href="/#about-us" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors text-center">About</a>
+            <a href="/contact" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors text-center">Contact</a>
+            <div class="pt-6">
+                <a href="#" class="block w-full text-center bg-secondary text-primary font-black py-4 rounded-xl shadow-neon tracking-widest text-lg">PLAY NOW</a>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+    <main class="flex-1 pt-24">

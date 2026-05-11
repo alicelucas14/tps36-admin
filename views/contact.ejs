@@ -1,0 +1,181 @@
+<%- include('includes/header') %>
+
+    <div class="max-w-7xl mx-auto px-4 py-16 relative">
+
+        <!-- Top Title -->
+        <div class="flex items-center gap-3 mb-10">
+            <div class="text-white text-3xl">
+                <i class="fa-solid fa-certificate"></i>
+            </div>
+            <h1 class="text-4xl font-black text-white tracking-wide">Contact <span class="text-[#FFF200] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Teen Patti</span> <span class="text-[#FFF200] drop-shadow-[0_0_15px_rgba(255,242,0,0.9)]">Stars</span></h1>
+        </div>
+
+        <!-- 3 Contact Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+
+            <% if(contactCards && contactCards.length> 0) { %>
+                <% contactCards.forEach(card=> { %>
+                    <div
+                        class="bg-[#03305c] rounded-2xl p-8 relative overflow-hidden shadow-lg border border-blue-800/50 flex flex-col h-[280px]">
+                        <div class="mb-auto z-10 relative">
+                            <p class="text-secondary text-sm font-bold tracking-wider uppercase mb-2">
+                                <%= card.subtitle || '' %>
+                            </p>
+                            <h3 class="text-3xl font-black text-white mb-4 uppercase">
+                                <%= card.title %>
+                            </h3>
+                            <p class="text-white/80 text-sm leading-relaxed max-w-[200px]">
+                                <%= card.description %>
+                            </p>
+                        </div>
+                        <% if(card.button_text) { %>
+                            <a href="<%= card.button_link || '#' %>"
+                                class="bg-secondary text-[#001328] font-bold text-sm px-6 py-3 rounded uppercase mt-6 z-10 self-start hover:bg-white hover:text-primary transition-colors shadow-[0_0_15px_rgba(0,245,255,0.4)] inline-block">
+                                <%= card.button_text %>
+                            </a>
+                            <% } %>
+
+                                <% if(card.image_url) { %>
+                                    <div
+                                        class="absolute right-0 top-1/2 -translate-y-1/2 opacity-90 pr-4 pointer-events-none">
+                                        <img src="<%= card.image_url %>"
+                                            class="w-32 h-32 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+                                            alt="Icon">
+                                    </div>
+                                    <% } else { %>
+                                        <div
+                                            class="absolute right-0 top-1/2 -translate-y-1/2 opacity-90 pr-4 pointer-events-none">
+                                            <% if (card.title && card.title.toLowerCase().includes('chat')) { %>
+                                                <div class="relative">
+                                                    <i
+                                                        class="fa-solid fa-comments text-7xl text-secondary drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform rotate-[-10deg]"></i>
+                                                    <i
+                                                        class="fa-solid fa-comment-dots text-5xl text-white absolute -top-4 -right-4 drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)] transform rotate-[10deg]"></i>
+                                                </div>
+                                                <% } else if (card.title && card.title.toLowerCase().includes('mail')) {
+                                                    %>
+                                                    <div
+                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-secondary/40 to-blue-600/10 border-4 border-secondary/50 flex items-center justify-center backdrop-blur-sm shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                                                        <i
+                                                            class="fa-solid fa-at text-5xl text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.5)]"></i>
+                                                    </div>
+                                                    <% } else if (card.title &&
+                                                        card.title.toLowerCase().includes('call')) { %>
+                                                        <div class="relative">
+                                                            <i
+                                                                class="fa-solid fa-phone-volume text-7xl text-secondary drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform rotate-[-20deg]"></i>
+                                                            <div
+                                                                class="absolute -top-8 -right-4 w-12 h-12 bg-white rounded-full border-2 border-secondary flex items-center justify-center shadow-[0_5px_10px_rgba(0,0,0,0.3)]">
+                                                                <i
+                                                                    class="fa-solid fa-user-headset text-primary text-xl"></i>
+                                                            </div>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <div
+                                                                class="w-24 h-24 rounded-full bg-secondary/10 flex items-center justify-center">
+                                                                <i
+                                                                    class="fa-solid fa-envelope-open-text text-5xl text-secondary opacity-50"></i>
+                                                            </div>
+                                                            <% } %>
+                                        </div>
+                                        <% } %>
+                    </div>
+                    <% }) %>
+                        <% } else { %>
+                            <div
+                                class="col-span-1 md:col-span-3 text-center py-12 bg-[#03305c] rounded-2xl border border-blue-800/50">
+                                <p class="text-white/50">No contact methods available at the moment.</p>
+                            </div>
+                            <% } %>
+
+        </div>
+
+        <!-- Bottom Section: FAQ -->
+        <div class="mb-10 flex items-center gap-3">
+            <div
+                class="text-white text-3xl bg-white text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold">
+                <i class="fa-solid fa-question text-xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-white tracking-wide">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+            <!-- Left Side Image -->
+            <div class="lg:col-span-5 relative">
+                <img src="<%= settings['contact_faq_image'] || '/images/casino_phone_burst.png' %>" alt="FAQ Graphic"
+                    class="w-full h-auto drop-shadow-[0_0_30px_rgba(0,245,255,0.2)] animate-float">
+            </div>
+
+            <!-- Right Side Accordion -->
+            <div class="lg:col-span-7 space-y-4 pt-4 lg:pt-10">
+                <% const displayFaqs=(faqs && faqs.length> 0) ? faqs : [
+                    { question: "I forgot my password. What should I do?", answer: "Click on 'Forgot Password' on the login page and follow the instructions sent to your email." },
+                    { question: "How do I verify my account?", answer: "Upload your ID and utility bill in the profile section to complete the KYC verification." },
+                    { question: "Can I have more than one account?", answer: "No, our terms of service strictly prohibit having multiple accounts per user." },
+                    { question: "Why is my withdrawal pending?", answer: "Withdrawals typically take 24-48 hours to process. If it takes longer, please contact support." },
+                    { question: "What are your support hours?", answer: "Our live chat and email support are available 24/7." }
+                    ];
+
+                    displayFaqs.forEach((faq, index) => { %>
+                    <div class="border border-[#06427a] bg-[#022448] rounded-xl overflow-hidden shadow-sm group">
+                        <button type="button"
+                            class="w-full flex justify-between items-center p-5 text-left focus:outline-none"
+                            onclick="toggleContactFaq('<%= index %>')">
+                            <span class="font-semibold text-white text-lg pr-4">
+                                <%= faq.question %>
+                            </span>
+                            <div class="w-8 h-8 rounded bg-[#06427a] flex items-center justify-center text-secondary transform transition-transform duration-300"
+                                id="contact-icon-<%= index %>">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </button>
+                        <div class="max-h-0 overflow-hidden transition-all duration-300"
+                            id="contact-content-<%= index %>">
+                            <div class="p-5 pt-0 text-slate-300 leading-relaxed border-t border-[#06427a] mt-2 pt-4">
+                                <%= faq.answer %>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FAQ Script -->
+    <script>
+        function toggleContactFaq(index) {
+            const content = document.getElementById(`contact-content-${index}`);
+            const icon = document.getElementById(`contact-icon-${index}`);
+
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+
+    <%- include('includes/footer') %>

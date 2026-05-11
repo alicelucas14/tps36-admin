@@ -1,0 +1,232 @@
+<%- include('includes/header') %>
+
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Live Chat Settings</h1>
+        <p class="text-sm text-gray-500 mt-1">Configure your chat widget, bot responses, and Telegram agent handoff.</p>
+    </div>
+    <a href="/" target="_blank" class="flex items-center gap-2 text-sm bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-lg hover:bg-blue-100 transition font-semibold">
+        <i class="fa-solid fa-eye"></i> Preview Widget
+    </a>
+</div>
+
+<% if (success) { %>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> Changes saved successfully!
+    </div>
+<% } %>
+
+<!-- Widget Configuration -->
+<form method="POST" action="/admin/chat" enctype="multipart/form-data" class="space-y-6 mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"><i class="fa-solid fa-sliders text-sm"></i></div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-800">Widget Settings</h3>
+                    <p class="text-xs text-gray-500">General chat configuration</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-gray-600">Enable Chat</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="chat_enabled" value="1" class="sr-only peer" <%= settings['chat_enabled'] === '1' ? 'checked' : '' %>>
+                    <div class="w-11 h-6 bg-gray-200 peer-checked:bg-blue-600 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                </label>
+            </div>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- Avatar Upload -->
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Bot Avatar Image</label>
+                <div class="flex items-center gap-6">
+                    <!-- Current Avatar Preview -->
+                    <div class="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 flex-shrink-0" id="avatar-preview-wrap">
+                        <% if (settings['chat_avatar']) { %>
+                            <img src="<%= settings['chat_avatar'] %>" alt="Bot Avatar" class="w-full h-full object-cover" id="avatar-preview-img">
+                        <% } else { %>
+                            <i class="fa-solid fa-robot text-3xl text-gray-300" id="avatar-placeholder-icon"></i>
+                        <% } %>
+                    </div>
+                    <div class="flex-1">
+                        <label for="chat_avatar_file" class="flex items-center gap-2 cursor-pointer w-fit bg-white border border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 hover:text-blue-600 px-4 py-2.5 rounded-lg text-sm font-semibold transition">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i> Upload Image
+                            <input type="file" name="chat_avatar_file" id="chat_avatar_file" accept="image/*" class="hidden" onchange="previewAvatar(this)">
+                        </label>
+                        <p class="text-xs text-gray-400 mt-2">Shown in the chat button and message bubbles. <strong>Recommended:</strong> Square image, min 100×100px (JPG, PNG, WEBP).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Bot Name</label>
+                <input type="text" name="chat_bot_name" value="<%= settings['chat_bot_name'] || '' %>" placeholder="Stars Support Bot"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Human Agent Label</label>
+                <input type="text" name="chat_agent_name" value="<%= settings['chat_agent_name'] || '' %>" placeholder="Live Agent"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Welcome Message</label>
+                <input type="text" name="chat_welcome_message" value="<%= settings['chat_welcome_message'] || '' %>"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <i class="fa-brands fa-telegram text-blue-500 mr-1"></i> Telegram Agent Link
+                </label>
+                <input type="url" name="chat_telegram_link" value="<%= settings['chat_telegram_link'] || '' %>" placeholder="https://t.me/yourusername"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+                <p class="text-xs text-gray-400 mt-1">Users requesting a human agent will be directed here via Telegram.</p>
+            </div>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold text-sm transition flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i> Save Settings
+            </button>
+        </div>
+    </div>
+
+    <!-- Telegram Bridge Config -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-sky-50 to-blue-50 px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-9 h-9 bg-sky-100 rounded-lg flex items-center justify-center text-sky-500"><i class="fa-brands fa-telegram text-sm"></i></div>
+            <div>
+                <h3 class="text-base font-bold text-gray-800">Telegram Bridge — Two-Way Chat</h3>
+                <p class="text-xs text-gray-500">Agent replies in Telegram → message instantly appears in the user's chat widget</p>
+            </div>
+        </div>
+        <div class="p-6 space-y-5">
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 space-y-1">
+                <p class="font-bold flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> Setup Instructions</p>
+                <ol class="list-decimal ml-5 space-y-1 text-xs mt-2">
+                    <li>Message <strong>@BotFather</strong> on Telegram → create a new bot → copy the <strong>Bot Token</strong></li>
+                    <li>Start a chat with your bot, then visit:<br><code class="bg-amber-100 px-1 rounded">https://api.telegram.org/bot YOUR_TOKEN/getUpdates</code><br>Send the bot a message and find your <strong>chat id</strong> in the response</li>
+                    <li>Paste both values below and save</li>
+                </ol>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Telegram Bot Token</label>
+                    <input type="text" name="telegram_bot_token" value="<%= settings['telegram_bot_token'] || '' %>"
+                        placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-xs text-gray-400 mt-1">From @BotFather on Telegram</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Your Telegram Chat ID</label>
+                    <input type="text" name="telegram_agent_chat_id" value="<%= settings['telegram_agent_chat_id'] || '' %>"
+                        placeholder="e.g. 987654321"
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-xs text-gray-400 mt-1">Your personal Telegram user ID — the bot will message <strong>you</strong> when a customer requests an agent</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<!-- Bot Q&A Knowledge Base -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center text-green-600"><i class="fa-solid fa-brain text-sm"></i></div>
+            <div>
+                <h3 class="text-base font-bold text-gray-800">Bot Knowledge Base</h3>
+                <p class="text-xs text-gray-500">Custom Q&A pairs — the bot matches user messages to these keywords and replies automatically</p>
+            </div>
+        </div>
+        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full"><%= (typeof qaRows !== 'undefined' ? qaRows : []).length %> entries</span>
+    </div>
+
+    <!-- Existing Q&A Rows -->
+    <div class="divide-y divide-gray-100" id="qa-list">
+        <% if (qaRows.length === 0) { %>
+        <div class="px-6 py-10 text-center text-gray-400" id="empty-state">
+            <i class="fa-solid fa-comment-slash text-3xl mb-3 opacity-40"></i>
+            <p class="text-sm font-medium">No Q&A pairs yet.</p>
+            <p class="text-xs mt-1">Add your first entry below.</p>
+        </div>
+        <% } %>
+        <% qaRows.forEach((row, i) => { %>
+        <div class="px-6 py-4 flex items-start gap-4" id="row-<%= row.id %>">
+            <div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-xs font-bold flex-shrink-0 mt-1"><%= i + 1 %></div>
+            <form method="POST" action="/admin/chat/qa/update/<%= row.id %>" class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">Trigger Keyword / Phrase</label>
+                    <input type="text" name="keyword" value="<%= row.keyword %>" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g. how to deposit">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">Bot Reply</label>
+                    <input type="text" name="answer" value="<%= row.answer %>" required
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Bot's response to this keyword">
+                </div>
+                <div class="md:col-span-2 flex gap-2">
+                    <button type="submit" class="flex items-center gap-1.5 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-semibold px-3 py-1.5 rounded-lg transition">
+                        <i class="fa-solid fa-floppy-disk"></i> Save
+                    </button>
+            </form>
+            <form method="POST" action="/admin/chat/qa/delete/<%= row.id %>" onsubmit="return confirm('Delete this Q&A entry?')" class="flex">
+                    <button type="submit" class="flex items-center gap-1.5 text-xs bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-semibold px-3 py-1.5 rounded-lg transition">
+                        <i class="fa-solid fa-trash-can"></i> Delete
+                    </button>
+            </form>
+                </div>
+        </div>
+        <% }) %>
+    </div>
+
+    <!-- Add New Q&A -->
+    <div class="px-6 py-5 bg-gray-50 border-t border-gray-100">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Add New Q&A Pair</p>
+        <form method="POST" action="/admin/chat/qa/add" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Trigger Keyword / Phrase</label>
+                <input type="text" name="keyword" required placeholder="e.g. minimum deposit"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                <p class="text-xs text-gray-400 mt-1">The bot detects this keyword in user messages (case-insensitive).</p>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Bot Reply</label>
+                <input type="text" name="answer" required placeholder="The bot's response when this keyword is matched"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                <p class="text-xs text-gray-400 mt-1">Keep it concise and friendly.</p>
+            </div>
+            <div class="md:col-span-2">
+                <button type="submit" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold text-sm transition">
+                    <i class="fa-solid fa-plus"></i> Add Q&A Entry
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Agent Trigger Info -->
+    <div class="px-6 py-4 border-t border-gray-100">
+        <p class="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-blue-400"></i> Built-in Agent Handoff Keywords (automatic — no setup needed)</p>
+        <div class="flex flex-wrap gap-2">
+            <% ['agent', 'human', 'speak to someone', 'talk to someone', 'live support', 'real person', 'representative', 'operator'].forEach(k => { %>
+                <span class="bg-orange-50 text-orange-700 border border-orange-200 rounded-full px-3 py-1 text-xs font-medium"><%= k %></span>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewAvatar(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const wrap = document.getElementById('avatar-preview-wrap');
+        wrap.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" id="avatar-preview-img">`;
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+</script>
+
+<%- include('includes/footer') %>

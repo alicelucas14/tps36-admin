@@ -1,0 +1,178 @@
+<%- include('includes/header') %>
+
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">SEO Management</h1>
+        <p class="text-sm text-gray-500 mt-1">Control all meta tags, analytics, and search engine settings site-wide.</p>
+    </div>
+    <a href="<%= settings['seo_base_url'] || '#' %>" target="_blank" class="text-sm text-blue-500 hover:underline flex items-center gap-1">
+        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> View Live Site
+    </a>
+</div>
+
+<% if (success) { %>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> SEO settings saved successfully!
+    </div>
+<% } %>
+
+<form method="POST" action="/admin/seo" class="space-y-6">
+
+    <!-- Analytics & Tracking -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"><i class="fa-brands fa-google text-sm"></i></div>
+            <div>
+                <h3 class="text-base font-bold text-gray-800">Analytics & Tracking</h3>
+                <p class="text-xs text-gray-500">Connect your measurement tools</p>
+            </div>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Google Analytics ID <span class="text-gray-400 font-normal">(GA4)</span></label>
+                <input type="text" name="seo_google_analytics" value="<%= settings['seo_google_analytics'] || '' %>" placeholder="G-XXXXXXXXXX"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+                <p class="text-xs text-gray-400 mt-1">Paste your GA4 Measurement ID to enable analytics tracking.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Google Search Console <span class="text-gray-400 font-normal">(Verification)</span></label>
+                <input type="text" name="seo_google_verification" value="<%= settings['seo_google_verification'] || '' %>" placeholder="google-site-verification=..."
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+                <p class="text-xs text-gray-400 mt-1">Paste the full meta tag content from Google Search Console.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Facebook Pixel ID</label>
+                <input type="text" name="seo_facebook_pixel" value="<%= settings['seo_facebook_pixel'] || '' %>" placeholder="123456789012345"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+                <p class="text-xs text-gray-400 mt-1">Enter your Facebook Pixel ID to track conversions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technical SEO -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-50 to-violet-50 px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600"><i class="fa-solid fa-gear text-sm"></i></div>
+            <div>
+                <h3 class="text-base font-bold text-gray-800">Technical SEO</h3>
+                <p class="text-xs text-gray-500">Robots, canonical URLs, and default meta</p>
+            </div>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Canonical Base URL</label>
+                <input type="url" name="seo_base_url" value="<%= settings['seo_base_url'] || '' %>" placeholder="https://teenpattistars.com"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-xs text-gray-400 mt-1">Your site's root URL for canonical tags and sitemap.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Robots Directive</label>
+                <select name="seo_robots" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option value="index, follow" <%= settings['seo_robots'] === 'index, follow' ? 'selected' : '' %>>index, follow (Recommended)</option>
+                    <option value="noindex, follow" <%= settings['seo_robots'] === 'noindex, follow' ? 'selected' : '' %>>noindex, follow</option>
+                    <option value="index, nofollow" <%= settings['seo_robots'] === 'index, nofollow' ? 'selected' : '' %>>index, nofollow</option>
+                    <option value="noindex, nofollow" <%= settings['seo_robots'] === 'noindex, nofollow' ? 'selected' : '' %>>noindex, nofollow (Block all)</option>
+                </select>
+                <p class="text-xs text-gray-400 mt-1">Controls how search bots crawl your site.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Default OG Image URL</label>
+                <input type="text" name="seo_og_image" value="<%= settings['seo_og_image'] || '' %>" placeholder="/images/og-image.jpg"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-xs text-gray-400 mt-1">Default image shown when pages are shared on social media. (1200x630px)</p>
+            </div>
+            <div class="md:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Default Keywords <span class="text-gray-400 font-normal">(site-wide fallback)</span></label>
+                <input type="text" name="seo_default_keywords" value="<%= settings['seo_default_keywords'] || '' %>"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-xs text-gray-400 mt-1">Comma-separated keywords used as fallback on pages without specific keywords.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page-Specific SEO -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center text-green-600"><i class="fa-solid fa-file-lines text-sm"></i></div>
+            <div>
+                <h3 class="text-base font-bold text-gray-800">Page-Specific SEO</h3>
+                <p class="text-xs text-gray-500">Custom titles and descriptions for each page</p>
+            </div>
+        </div>
+        <div class="p-6 space-y-6">
+
+            <!-- Helper macro -->
+            <% const pages = [
+                { key: 'home', label: 'Homepage', icon: 'fa-house', url: '/', color: 'blue', hasKeywords: true },
+                { key: 'blogs', label: 'Blogs', icon: 'fa-pen-nib', url: '/blogs', color: 'indigo', hasKeywords: false },
+                { key: 'reviews', label: 'Reviews', icon: 'fa-star', url: '/reviews', color: 'yellow', hasKeywords: false },
+                { key: 'faq', label: 'FAQ', icon: 'fa-circle-question', url: '/faq', color: 'green', hasKeywords: false }
+            ]; %>
+
+            <% pages.forEach(page => { %>
+            <div class="border border-gray-100 rounded-xl p-5">
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fa-solid <%= page.icon %> text-<%= page.color %>-500 text-sm"></i>
+                    <h4 class="font-bold text-gray-700 text-sm"><%= page.label %></h4>
+                    <a href="<%= page.url %>" target="_blank" class="text-xs text-gray-400 hover:text-blue-500 ml-auto"><%= page.url %> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Page Title <span class="text-gray-400 font-normal text-[11px]">(max 60 chars)</span></label>
+                        <input type="text" name="seo_<%= page.key %>_title" maxlength="70"
+                            value="<%= settings['seo_' + page.key + '_title'] || '' %>"
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            oninput="updateCount(this, '<%= page.key %>_title_count')">
+                        <div class="flex justify-between mt-1">
+                            <p class="text-xs text-gray-400">Appears in browser tab and search results</p>
+                            <span id="<%= page.key %>_title_count" class="text-xs text-gray-400"><%= (settings['seo_' + page.key + '_title'] || '').length %>/60</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Meta Description <span class="text-gray-400 font-normal text-[11px]">(max 160 chars)</span></label>
+                        <textarea name="seo_<%= page.key %>_description" maxlength="165" rows="2"
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            oninput="updateCount(this, '<%= page.key %>_desc_count')"><%= settings['seo_' + page.key + '_description'] || '' %></textarea>
+                        <div class="flex justify-between mt-1">
+                            <p class="text-xs text-gray-400">Shown in Google search result snippets</p>
+                            <span id="<%= page.key %>_desc_count" class="text-xs text-gray-400"><%= (settings['seo_' + page.key + '_description'] || '').length %>/160</span>
+                        </div>
+                    </div>
+                    <% if (page.hasKeywords) { %>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Page Keywords</label>
+                        <input type="text" name="seo_<%= page.key %>_keywords" value="<%= settings['seo_' + page.key + '_keywords'] || '' %>"
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            <% }); %>
+
+        </div>
+    </div>
+
+    <!-- Save -->
+    <div class="flex items-center justify-between bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+        <div class="text-sm text-gray-500 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-blue-400"></i>
+            Changes take effect immediately after saving. Restart the server to apply analytics scripts.
+        </div>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-bold shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i> Save SEO Settings
+        </button>
+    </div>
+
+</form>
+
+<script>
+    function updateCount(input, countId) {
+        const max = input.tagName === 'TEXTAREA' ? 160 : 60;
+        const len = input.value.length;
+        const el = document.getElementById(countId);
+        el.textContent = len + '/' + max;
+        el.className = 'text-xs ' + (len > max ? 'text-red-500 font-bold' : len > max * 0.85 ? 'text-yellow-500' : 'text-gray-400');
+    }
+</script>
+
+<%- include('includes/footer') %>

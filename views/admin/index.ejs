@@ -1,0 +1,245 @@
+<%- include('includes/header') %>
+
+<h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Summary</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-2xl">
+            <i class="fa-solid fa-pen-nib"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-gray-500">Blogs</p>
+            <h3 class="text-2xl font-bold text-gray-800"><%= stats.blogs %></h3>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500 text-2xl">
+            <i class="fa-solid fa-star"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-gray-500">Reviews</p>
+            <h3 class="text-2xl font-bold text-gray-800"><%= stats.reviews %></h3>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center text-green-500 text-2xl">
+            <i class="fa-solid fa-circle-question"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-gray-500">FAQs</p>
+            <h3 class="text-2xl font-bold text-gray-800"><%= stats.faqs %></h3>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 text-2xl">
+            <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-gray-500">Categories</p>
+            <h3 class="text-2xl font-bold text-gray-800"><%= stats.categories %></h3>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center text-red-500 text-2xl">
+            <i class="fa-solid fa-envelope"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-gray-500">Messages</p>
+            <h3 class="text-2xl font-bold text-gray-800"><%= stats.contacts %></h3>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl shadow-sm p-6 border border-orange-200 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-orange-500 text-white flex items-center justify-center text-2xl shadow-md">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-orange-800">Unique Visitors</p>
+            <h3 class="text-2xl font-bold text-orange-900"><%= stats.unique_visitors %></h3>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-blue-500 text-white flex items-center justify-center text-2xl shadow-md">
+            <i class="fa-solid fa-hand-pointer"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-blue-800">Button Clicks</p>
+            <h3 class="text-2xl font-bold text-blue-900"><%= stats.total_clicks %></h3>
+        </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Recent Blogs -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-gray-800">Recent Blogs</h3>
+            <a href="/admin/blogs" class="text-blue-600 text-sm font-medium hover:underline">View All</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Title</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <% recentBlogs.forEach(blog => { %>
+                    <tr>
+                        <td class="px-6 py-4 font-medium"><%= blog.title %></td>
+                        <td class="px-6 py-4 text-gray-500"><%= new Date(blog.created_at).toLocaleDateString() %></td>
+                    </tr>
+                    <% }) %>
+                    <% if(recentBlogs.length === 0) { %>
+                        <tr><td colspan="2" class="px-6 py-8 text-center text-gray-400">No blogs yet.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Reviews -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-gray-800">Recent Reviews</h3>
+            <a href="/admin/reviews" class="text-blue-600 text-sm font-medium hover:underline">View All</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Reviewer</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Rating</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <% recentReviews.forEach(r => { %>
+                    <tr>
+                        <td class="px-6 py-4 font-medium"><%= r.reviewer_name %></td>
+                        <td class="px-6 py-4 text-yellow-500">
+                            <% for(let i=0; i<r.rating; i++) { %><i class="fa-solid fa-star text-xs"></i><% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                    <% if(recentReviews.length === 0) { %>
+                        <tr><td colspan="2" class="px-6 py-8 text-center text-gray-400">No reviews yet.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    <!-- Recent Visitors -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden border-t-4 border-t-orange-500">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-earth-americas text-orange-500 mr-2"></i> Recent Visitors</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Location & IP</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase text-center">Visits</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase text-right">Last Seen</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <% recentVisitors.forEach(v => { %>
+                    <tr>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-gray-900"><%= v.city && v.city !== 'Unknown' ? v.city + ', ' + v.country : v.country %></div>
+                            <div class="text-xs text-gray-400 font-mono mt-0.5"><%= v.ip_address %></div>
+                        </td>
+                        <td class="px-6 py-4 text-center font-bold text-orange-600"><%= v.visits %></td>
+                        <td class="px-6 py-4 text-right text-gray-500"><%= new Date(v.last_visited).toLocaleString() %></td>
+                    </tr>
+                    <% }) %>
+                    <% if(recentVisitors.length === 0) { %>
+                        <tr><td colspan="3" class="px-6 py-8 text-center text-gray-400">No visitors tracked yet.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Top Clicked Elements -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden border-t-4 border-t-blue-500">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-fire text-blue-500 mr-2"></i> Most Clicked Buttons</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Element/Button Text</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase text-right">Click Count</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <% topClicks.forEach(c => { %>
+                    <tr>
+                        <td class="px-6 py-4 font-medium text-gray-800">
+                            <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-mono"><%= c.element_text %></span>
+                        </td>
+                        <td class="px-6 py-4 text-right font-bold text-blue-600"><%= c.clicks %> <i class="fa-solid fa-arrow-pointer text-xs ml-1 opacity-50"></i></td>
+                    </tr>
+                    <% }) %>
+                    <% if(topClicks.length === 0) { %>
+                        <tr><td colspan="2" class="px-6 py-8 text-center text-gray-400">No clicks tracked.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mb-8 mt-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+            <h3 class="text-lg font-bold text-gray-800">Recent Activity</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Action</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Details</th>
+                        <th class="px-6 py-3 font-semibold text-gray-500 uppercase">Time</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <% activities.forEach(act => { %>
+                    <tr>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-xs font-bold <%= 
+                                act.action.includes('Login') ? 'bg-blue-100 text-blue-700' : 
+                                act.action.includes('Delete') ? 'bg-red-100 text-red-700' : 
+                                act.action.includes('Add') ? 'bg-green-100 text-green-700' : 
+                                'bg-yellow-100 text-yellow-700' 
+                            %>">
+                                <%= act.action %>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600"><%= act.details %></td>
+                        <td class="px-6 py-4 text-gray-400"><%= new Date(act.created_at).toLocaleString() %></td>
+                    </tr>
+                    <% }) %>
+                    <% if(activities.length === 0) { %>
+                        <tr><td colspan="3" class="px-6 py-8 text-center text-gray-400">No activity logged yet.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<%- include('includes/footer') %>
