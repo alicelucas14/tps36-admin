@@ -361,7 +361,8 @@ db.serialize(() => {
         ['telegram_bot_token', ''],
         ['telegram_agent_chat_id', ''],
         ['admin_registration_key', 'TPS-ADMIN-2024'],
-        ['apk_file_url', '#']
+        ['apk_file_url', '#'],
+        ['ios_app_url', '#']
     ];
     const defStmt = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
     defaults.forEach(d => defStmt.run(d));
@@ -1255,7 +1256,7 @@ app.get('/admin/settings', requireAuth, async (req, res) => {
     res.render('admin/settings', { settings, success: false });
 });
 app.post('/admin/settings', requireAuth, upload.any(), (req, res) => {
-    const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions', 'apk_file_url'];
+    const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions', 'apk_file_url', 'ios_app_url'];
     const stmt = db.prepare("UPDATE settings SET value = ? WHERE key = ?");
     
     // Update text fields

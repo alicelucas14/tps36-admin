@@ -367,14 +367,12 @@
 <!-- Featured Blogs -->
 <% if(featuredBlogs && featuredBlogs.length > 0) { %>
 <section class="max-w-7xl mx-auto px-4 py-24">
-    <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
-        <div>
-            <h2 class="text-3xl font-black mb-2 tracking-wider uppercase text-white">Casino News & Updates</h2>
-            <p class="text-slate-400">Stay updated with the latest game tips and news.</p>
-        </div>
-        <a href="/blogs" class="px-6 py-2 border border-secondary text-secondary font-bold uppercase tracking-widest text-sm rounded hover:bg-secondary hover:text-primary hover:shadow-neon transition-all">View All</a>
+    <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-wider uppercase text-white">Casino News & Updates</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto shadow-neon mb-4"></div>
+        <p class="text-slate-400">Stay updated with the latest game tips and news.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <% featuredBlogs.forEach(blog => { %>
         <div class="bg-accent/60 rounded-xl overflow-hidden border border-secondary/10 hover:border-secondary hover:-translate-y-2 hover:shadow-neon transition-all duration-300 group flex flex-col h-full">
             <% if(blog.image_url) { %>
@@ -392,6 +390,9 @@
             </div>
         </div>
         <% }) %>
+    </div>
+    <div class="text-center mt-12">
+        <a href="/blogs" class="inline-block px-8 py-3 border-2 border-secondary text-secondary font-bold uppercase tracking-widest text-sm rounded hover:bg-secondary hover:text-primary hover:shadow-neon transition-all">View All Articles</a>
     </div>
 </section>
 <% } %>
