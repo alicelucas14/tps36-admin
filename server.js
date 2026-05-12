@@ -1231,8 +1231,8 @@ app.post('/admin/settings', requireAuth, upload.any(), (req, res) => {
     stmt.finalize(() => {
         logActivity('Update Settings', 'Site settings updated');
         const referrer = req.get('Referrer');
-        if (referrer && referrer.includes('/admin/contact-page')) {
-            res.redirect('/admin/contact-page');
+        if (referrer && !referrer.endsWith('/admin/settings')) {
+            res.redirect(referrer);
         } else {
             getSettings().then(settings => {
                 res.render('admin/settings', { settings, success: true });
