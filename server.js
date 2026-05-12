@@ -307,6 +307,15 @@ db.serialize(() => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
+    db.run(`CREATE TABLE IF NOT EXISTS checkout_steps (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        step_number INTEGER DEFAULT 1,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        image_url TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
     // Fix existing local IPs that are marked as 'Unknown' from initial testing
     db.run("UPDATE visitors SET country = 'Local Network', city = 'Developer Machine' WHERE ip_address IN ('127.0.0.1', '::1') AND country = 'Unknown'");
 
@@ -838,10 +847,13 @@ app.get('/privacy-policy', async (req, res) => {
 
 app.get('/checkout', async (req, res) => {
     const settings = await getSettings();
-    res.render('checkout', {
-        settings,
-        pageTitle: "Checkout",
-        pageDescription: "Checkout page for Teen Patti Stars."
+    db.all("SELECT * FROM checkout_steps ORDER BY step_number ASC, id ASC", (err, steps) => {
+        res.render('checkout', {
+            settings,
+            steps: steps || [],
+            pageTitle: "Checkout",
+            pageDescription: "Checkout page for Teen Patti Stars."
+        });
     });
 });
 
@@ -1518,6 +1530,49 @@ app.post('/admin/contact-page/card/delete/:id', requireAuth, (req, res) => {
     db.run("DELETE FROM contact_cards WHERE id = ?", [req.params.id], (err) => {
         logActivity('Delete Contact Card', `Deleted card ID: ${req.params.id}`);
         res.redirect('/admin/contact-page');
+    });
+});
+
+// ADMIN: Checkout Steps
+app.get('/admin/checkout-steps', requireAuth, (req, res) => {
+    db.all("SELECT * FROM checkout_steps ORDER BY step_number ASC, id ASC", (err, steps) => {
+        res.render('admin/checkout_steps', { path: req.path, steps: steps || [], error: null });
+    });
+});
+
+app.post('/admin/checkout-steps', requireAuth, upload.single('image'), (req, res) => {
+    const { step_number, title, description } = req.body;
+    const image_url = req.file ? '/uploads/' + req.file.filename : null;
+    
+    db.run("INSERT INTO checkout_steps (step_number, title, description, image_url) VALUES (?, ?, ?, ?)", 
+        [step_number || 1, title, description, image_url], (err) => {
+        logActivity('Add Checkout Step', `Added step: ${title}`);
+        res.redirect('/admin/checkout-steps');
+    });
+});
+
+app.get('/admin/checkout-steps/edit/:id', requireAuth, (req, res) => {
+    db.get("SELECT * FROM checkout_steps WHERE id = ?", [req.params.id], (err, step) => {
+        if (!step) return res.redirect('/admin/checkout-steps');
+        res.render('admin/checkout_step_form', { path: '/admin/checkout-steps', step, error: null });
+    });
+});
+
+app.post('/admin/checkout-steps/edit/:id', requireAuth, upload.single('image'), (req, res) => {
+    const { step_number, title, description, existing_image } = req.body;
+    const image_url = req.file ? '/uploads/' + req.file.filename : existing_image;
+    
+    db.run("UPDATE checkout_steps SET step_number = ?, title = ?, description = ?, image_url = ? WHERE id = ?", 
+        [step_number || 1, title, description, image_url, req.params.id], (err) => {
+        logActivity('Edit Checkout Step', `Updated step: ${title}`);
+        res.redirect('/admin/checkout-steps');
+    });
+});
+
+app.post('/admin/checkout-steps/delete/:id', requireAuth, (req, res) => {
+    db.run("DELETE FROM checkout_steps WHERE id = ?", [req.params.id], (err) => {
+        logActivity('Delete Checkout Step', `Deleted step ID: ${req.params.id}`);
+        res.redirect('/admin/checkout-steps');
     });
 });
 

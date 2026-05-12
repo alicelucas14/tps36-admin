@@ -166,26 +166,6 @@
             </div>
         </div>
 
-        <div>
-            <h3 class="text-lg font-bold border-b pb-2 mb-4">Checkout Page</h3>
-            <div class="space-y-2">
-                <div class="flex items-center justify-between mb-1">
-                    <label class="block text-sm font-medium">Checkout Page Content (Rich Content)</label>
-                    <button type="button" id="checkout-toggle" onclick="toggleEditor('checkout')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1 transition">
-                        <i class="fa-solid fa-expand text-[10px]"></i> Click to Edit
-                    </button>
-                </div>
-                <p class="text-xs text-gray-500">This content will appear on the public <a href="/checkout" target="_blank" class="text-blue-500 underline">/checkout</a> page.</p>
-                <div id="checkout-editor-wrap" class="relative border rounded-lg overflow-hidden transition-all duration-300" style="height: 80px;">
-                    <div id="checkout-editor" style="background: white; height: 100%;"></div>
-                    <div id="checkout-overlay" onclick="toggleEditor('checkout')" class="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center cursor-pointer group z-10">
-                        <span class="text-sm text-gray-500 font-semibold group-hover:text-blue-600 transition"><i class="fa-solid fa-pen mr-1"></i>Click to expand and edit</span>
-                    </div>
-                </div>
-                <input type="hidden" name="checkout_content" id="checkout-content">
-            </div>
-        </div>
-
         <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded font-medium shadow-md hover:bg-blue-700 transition">Save All Settings</button>
     </form>
 </div>
@@ -209,20 +189,13 @@
         placeholder: 'Enter your Terms & Conditions content here...'
     });
 
-    const checkoutQuill = new Quill('#checkout-editor', {
-        theme: 'snow',
-        modules: { toolbar: [['bold', 'italic', 'underline'], [{ 'header': [2, 3, false] }], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['link'], ['image', 'video'], ['clean']] },
-        placeholder: 'Enter your Checkout page content here...'
-    });
-
     // Pre-fill content
     quill.root.innerHTML = `<%- (settings['about_us_content'] || '').replace(/`/g, '\\`') %>`;
     privacyQuill.root.innerHTML = `<%- (settings['privacy_policy'] || '').replace(/`/g, '\\`') %>`;
     termsQuill.root.innerHTML = `<%- (settings['terms_conditions'] || '').replace(/`/g, '\\`') %>`;
-    checkoutQuill.root.innerHTML = `<%- (settings['checkout_content'] || '').replace(/`/g, '\\`') %>`;
 
     // Toggle expand/collapse
-    const editorState = { about: false, privacy: false, terms: false, checkout: false };
+    const editorState = { about: false, privacy: false, terms: false };
     function toggleEditor(name) {
         const wrap = document.getElementById(name + '-editor-wrap');
         const overlay = document.getElementById(name + '-overlay');
@@ -244,7 +217,6 @@
         document.getElementById('about-content').value = quill.root.innerHTML;
         document.getElementById('privacy-content').value = privacyQuill.root.innerHTML;
         document.getElementById('terms-content').value = termsQuill.root.innerHTML;
-        document.getElementById('checkout-content').value = checkoutQuill.root.innerHTML;
     });
 </script>
 

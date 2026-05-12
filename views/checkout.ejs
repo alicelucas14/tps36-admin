@@ -10,42 +10,32 @@
 
     <!-- Steps Container -->
     <div class="space-y-24">
-
-        <!-- Step 1 (Text Left, Image Right) -->
-        <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-            <div class="flex-1">
-                <h2 class="text-4xl font-black text-[#FFF200] mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">Step 1</h2>
-                <p class="text-xl md:text-2xl leading-relaxed text-slate-300">
-                    Customer needs to first Sign Up or login to the app with the help of his/her mobile number or Facebook
-                </p>
-            </div>
-            <div class="flex-1 w-full">
-                <div class="rounded-2xl border-2 border-secondary/20 overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.1)] transform hover:scale-[1.02] transition-transform duration-500">
-                    <!-- Placeholder: Replace src with your actual Step 1 image -->
-                    <img src="/images/hero.png" alt="Step 1 Login Screen" class="w-full h-auto object-cover">
+        <% if (steps && steps.length > 0) { %>
+            <% steps.forEach((step, index) => { %>
+                <!-- Step (Alternating Layout) -->
+                <div class="flex flex-col <%= index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' %> items-center gap-12 lg:gap-20">
+                    <div class="flex-1">
+                        <h2 class="text-4xl font-black text-[#FFF200] mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"><%= step.title %></h2>
+                        <div class="text-xl md:text-2xl leading-relaxed text-slate-300 whitespace-pre-wrap"><%= step.description %></div>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div class="rounded-2xl border-2 border-secondary/20 overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.1)] transform hover:scale-[1.02] transition-transform duration-500">
+                            <% if (step.image_url) { %>
+                                <img src="<%= step.image_url %>" alt="<%= step.title %>" class="w-full h-auto object-cover bg-[#000a14]">
+                            <% } else { %>
+                                <div class="w-full h-48 bg-[#000a14] flex items-center justify-center text-slate-500">
+                                    <i class="fa-solid fa-image text-4xl"></i>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
+            <% }) %>
+        <% } else { %>
+            <div class="text-center py-12">
+                <p class="text-slate-400 text-lg">No checkout steps have been configured yet.</p>
             </div>
-        </div>
-
-        <!-- Step 2 (Image Left, Text Right) -->
-        <div class="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20">
-            <div class="flex-1">
-                <h2 class="text-4xl font-black text-[#FFF200] mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">Step 2</h2>
-                <p class="text-xl md:text-2xl leading-relaxed text-slate-300 mb-6">
-                    After Login, customer goes to game page, where all different variety of games are available for entertainment. This game page also known as Main Game Lobby.
-                </p>
-                <p class="text-xl md:text-2xl leading-relaxed text-slate-300">
-                    User will find all kind of rummy games on this lobby as we can see on the above picture.
-                </p>
-            </div>
-            <div class="flex-1 w-full">
-                <div class="rounded-2xl border-2 border-secondary/20 overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.1)] transform hover:scale-[1.02] transition-transform duration-500">
-                    <!-- Placeholder: Replace src with your actual Step 2 image -->
-                    <img src="/images/casino_phone_burst.png" alt="Step 2 Main Lobby" class="w-full h-auto object-cover bg-[#000a14]">
-                </div>
-            </div>
-        </div>
-
+        <% } %>
     </div>
 
     <!-- Back / Contact Section -->
