@@ -428,6 +428,30 @@
 
 
 
+<!-- Withdrawal Partners -->
+<% if(withdrawalPartners && withdrawalPartners.length > 0) { %>
+<section class="py-16 bg-[#000a14] border-t border-secondary/10 relative overflow-hidden">
+    <div class="absolute inset-0 bg-secondary/5 blur-[100px] pointer-events-none rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[100px]"></div>
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl md:text-3xl font-black mb-4 tracking-wider uppercase text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">Our Withdrawal Partners</h2>
+            <div class="w-24 h-1 bg-secondary mx-auto shadow-neon"></div>
+        </div>
+        <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+            <% withdrawalPartners.forEach(partner => { %>
+                <div class="group relative hover:-translate-y-2 transition-transform duration-300 cursor-default">
+                    <img src="<%= partner.image_url %>" alt="<%= partner.name %>" class="h-16 md:h-20 w-auto object-contain rounded-[20px] shadow-lg drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_5px_15px_rgba(0,245,255,0.4)] transition-all">
+                    <!-- Tooltip -->
+                    <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-accent/90 backdrop-blur border border-secondary/30 text-white text-xs font-bold px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-neon">
+                        <%= partner.name %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<% } %>
+
 <!-- Include Popup Banner -->
 <%- include('includes/popup') %>
 

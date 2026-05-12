@@ -1,0 +1,53 @@
+<%- include('includes/header') %>
+
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Withdrawal Partners</h1>
+        <p class="text-gray-500 mt-1">Manage the payment logos shown on the homepage.</p>
+    </div>
+</div>
+
+<!-- Add New Partner -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 border-l-4 border-l-green-500">
+    <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-plus-circle text-green-500 mr-2"></i> Add New Partner</h3>
+    <form action="/admin/withdrawal-partners" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Partner Name</label>
+            <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none" placeholder="e.g. Visa, Bitcoin, Interac">
+        </div>
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Logo Image</label>
+            <input type="file" name="image" required accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+        </div>
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition">Add Partner</button>
+    </form>
+</div>
+
+<!-- Existing Partners -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2"><i class="fa-solid fa-list text-gray-500 mr-2"></i> Existing Partners</h3>
+    
+    <% if(partners && partners.length > 0) { %>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <% partners.forEach(partner => { %>
+                <div class="border border-gray-200 rounded-lg p-4 flex flex-col items-center hover:shadow-md transition bg-gray-50 relative group">
+                    <img src="<%= partner.image_url %>" alt="<%= partner.name %>" class="h-16 w-16 object-contain mb-3 bg-white rounded p-1 shadow-sm">
+                    <h4 class="font-bold text-sm text-gray-800 text-center"><%= partner.name %></h4>
+                    
+                    <form action="/admin/withdrawal-partners/delete/<%= partner.id %>" method="POST" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" onsubmit="return confirm('Delete this partner?');">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <div class="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <i class="fa-solid fa-folder-open text-3xl text-gray-400 mb-2 block"></i>
+            <p class="text-gray-500">No withdrawal partners found. Add your first one above!</p>
+        </div>
+    <% } %>
+</div>
+
+<%- include('includes/footer') %>

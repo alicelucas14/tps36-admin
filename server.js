@@ -249,6 +249,13 @@ db.serialize(() => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
+    db.run(`CREATE TABLE IF NOT EXISTS withdrawal_partners (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        image_url TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
     db.run(`CREATE TABLE IF NOT EXISTS chat_qa (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         keyword TEXT NOT NULL,
@@ -397,6 +404,25 @@ db.serialize(() => {
             ccStmt.finalize();
         }
     });
+
+    // Default Withdrawal Partners
+    db.get("SELECT COUNT(*) as count FROM withdrawal_partners", (err, row) => {
+        if (row && row.count === 0) {
+            const defaultPartners = [
+                ['Visa', '/uploads/visa.png'],
+                ['Mastercard', '/uploads/mastercard.png'],
+                ['Bitcoin', '/uploads/bitcoin.png'],
+                ['Bitcoin Cash', '/uploads/bitcoincash.png'],
+                ['Lightning', '/uploads/lightning.png'],
+                ['Litecoin', '/uploads/litecoin.png'],
+                ['Ethereum', '/uploads/ethereum.png'],
+                ['Interac', '/uploads/interac.png']
+            ];
+            const wpStmt = db.prepare('INSERT INTO withdrawal_partners (name, image_url) VALUES (?, ?)');
+            defaultPartners.forEach(p => wpStmt.run(p));
+            wpStmt.finalize();
+        }
+    });
 });
 
 // Helper Functions
@@ -520,13 +546,16 @@ app.get('/', async (req, res) => {
             db.all("SELECT * FROM faqs ORDER BY created_at ASC LIMIT 4", (err, faqPreview) => {
                 db.all("SELECT * FROM home_accordions ORDER BY created_at ASC", (err, homeAccordions) => {
                     db.all("SELECT * FROM popup_banners WHERE is_active = 1 ORDER BY created_at DESC LIMIT 3", (err, popupBanners) => {
-                        res.render('index', { 
-                            settings, 
-                            featuredBlogs: featuredBlogs || [], 
-                            recentReviews: recentReviews || [],
-                            faqPreview: faqPreview || [],
-                            homeAccordions: homeAccordions || [],
-                            popupBanners: popupBanners || []
+                        db.all("SELECT * FROM withdrawal_partners ORDER BY created_at ASC", (err, withdrawalPartners) => {
+                            res.render('index', { 
+                                settings, 
+                                featuredBlogs: featuredBlogs || [], 
+                                recentReviews: recentReviews || [],
+                                faqPreview: faqPreview || [],
+                                homeAccordions: homeAccordions || [],
+                                popupBanners: popupBanners || [],
+                                withdrawalPartners: withdrawalPartners || []
+                            });
                         });
                     });
                 });
@@ -1347,6 +1376,30 @@ app.post('/admin/home-accordions/edit/:id', requireAuth, (req, res) => {
         });
 });
 
+// ADMIN: Withdrawal Partners
+app.get('/admin/withdrawal-partners', requireAuth, (req, res) => {
+    db.all("SELECT * FROM withdrawal_partners ORDER BY created_at ASC", (err, partners) => {
+        res.render('admin/withdrawal_partners', { path: req.path, partners: partners || [], success: false, error: null });
+    });
+});
+
+app.post('/admin/withdrawal-partners', requireAuth, upload.single('image'), (req, res) => {
+    const { name } = req.body;
+    if (!req.file || !name) return res.redirect('/admin/withdrawal-partners');
+    
+    const image_url = '/uploads/' + req.file.filename;
+    db.run("INSERT INTO withdrawal_partners (name, image_url) VALUES (?, ?)", [name, image_url], (err) => {
+        logActivity('Add Withdrawal Partner', `Partner: ${name}`);
+        res.redirect('/admin/withdrawal-partners');
+    });
+});
+
+app.post('/admin/withdrawal-partners/delete/:id', requireAuth, (req, res) => {
+    db.run("DELETE FROM withdrawal_partners WHERE id = ?", [req.params.id], (err) => {
+        logActivity('Delete Withdrawal Partner', `Deleted partner ID: ${req.params.id}`);
+        res.redirect('/admin/withdrawal-partners');
+    });
+});
 
 // ADMIN: Popup Banners
 app.get('/admin/popup-banners', requireAuth, async (req, res) => {
