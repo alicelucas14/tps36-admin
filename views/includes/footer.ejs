@@ -11,7 +11,17 @@
                         <img src="/images/Teen-Patti-Stars-Logo.webp" alt="Teen Patti Stars" class="h-12 w-auto drop-shadow-[0_0_8px_rgba(0,245,255,0.5)]">
                         <span class="text-xl font-black tracking-wide text-[#FFF200]" style="text-shadow: 0 4px 6px rgba(0,0,0,0.5);">Teen Patti <br/><span style="text-shadow: 0 4px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,242,0,0.8), 0 0 40px rgba(255,242,0,0.4);">Stars</span></span>
                     </a>
-                    <p class="text-sm leading-relaxed text-slate-500">Play skill-based games with secure payments, instant withdrawals, and 24/7 VIP support. The ultimate casino experience.</p>
+                    <p class="text-sm leading-relaxed text-slate-500 mb-8">Play skill-based games with secure payments, instant withdrawals, and 24/7 VIP support. The ultimate casino experience.</p>
+                    
+                    <% if(withdrawalPartners && withdrawalPartners.length > 0) { %>
+                        <div class="flex flex-wrap items-center gap-2 mt-4">
+                            <% withdrawalPartners.forEach(partner => { %>
+                                <div class="group relative">
+                                    <img src="<%= partner.image_url %>" alt="<%= partner.name %>" class="h-8 w-auto object-contain rounded bg-[#1a1f2e] border border-white/5 drop-shadow-md group-hover:scale-110 transition-transform cursor-default" title="<%= partner.name %>">
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
                 </div>
                 
                 <!-- Right Columns container -->

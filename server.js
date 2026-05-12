@@ -64,10 +64,19 @@ app.use((req, res, next) => {
     next();
 });
 
-// Inject current path for active link highlighting
+// Inject current path for active link highlighting and global public data
 app.use((req, res, next) => {
     res.locals.path = req.path;
-    next();
+    
+    // Only fetch for public HTML pages
+    if (!req.path.startsWith('/admin') && !req.path.startsWith('/api') && !req.path.includes('.')) {
+        db.all("SELECT * FROM withdrawal_partners ORDER BY created_at ASC", (err, rows) => {
+            res.locals.withdrawalPartners = rows || [];
+            next();
+        });
+    } else {
+        next();
+    }
 });
 
 // Block ALL /admin routes from search engine indexing
@@ -538,6 +547,14 @@ const getSettings = () => {
     });
 };
 
+const getWithdrawalPartners = () => {
+    return new Promise((resolve) => {
+        db.all("SELECT * FROM withdrawal_partners ORDER BY created_at ASC", (err, rows) => {
+            resolve(rows || []);
+        });
+    });
+};
+
 // ================= PUBLIC ROUTES =================
 app.get('/', async (req, res) => {
     const settings = await getSettings();
@@ -546,16 +563,13 @@ app.get('/', async (req, res) => {
             db.all("SELECT * FROM faqs ORDER BY created_at ASC LIMIT 4", (err, faqPreview) => {
                 db.all("SELECT * FROM home_accordions ORDER BY created_at ASC", (err, homeAccordions) => {
                     db.all("SELECT * FROM popup_banners WHERE is_active = 1 ORDER BY created_at DESC LIMIT 3", (err, popupBanners) => {
-                        db.all("SELECT * FROM withdrawal_partners ORDER BY created_at ASC", (err, withdrawalPartners) => {
-                            res.render('index', { 
-                                settings, 
-                                featuredBlogs: featuredBlogs || [], 
-                                recentReviews: recentReviews || [],
-                                faqPreview: faqPreview || [],
-                                homeAccordions: homeAccordions || [],
-                                popupBanners: popupBanners || [],
-                                withdrawalPartners: withdrawalPartners || []
-                            });
+                        res.render('index', { 
+                            settings, 
+                            featuredBlogs: featuredBlogs || [], 
+                            recentReviews: recentReviews || [],
+                            faqPreview: faqPreview || [],
+                            homeAccordions: homeAccordions || [],
+                            popupBanners: popupBanners || []
                         });
                     });
                 });
