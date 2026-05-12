@@ -336,6 +336,7 @@ db.serialize(() => {
         ['contact_faq_image', '/images/casino_phone_burst.png'],
         ['privacy_policy', '<h2>Privacy Policy</h2><p>Welcome to Teen Patti Stars. We are committed to protecting your personal information and your right to privacy. This policy outlines how we collect, use, and safeguard your data.</p><h3>Information We Collect</h3><p>We may collect information such as your name, email address, phone number, and payment details when you register or interact with our platform.</p><h3>How We Use Your Information</h3><p>Your information is used to process transactions, manage your account, provide customer support, and improve our services.</p><h3>Data Security</h3><p>We implement industry-standard security measures to protect your personal data from unauthorized access, alteration, or disclosure.</p><h3>Contact Us</h3><p>If you have any questions about this Privacy Policy, please contact our support team.</p>'],
         ['terms_conditions', '<h2>Terms &amp; Conditions</h2><p>By accessing and using Teen Patti Stars, you agree to be bound by these Terms and Conditions. Please read them carefully before using our platform.</p><h3>Eligibility</h3><p>You must be at least 18 years of age to use our platform. By using our services, you confirm that you meet this age requirement and that all information you provide is accurate.</p><h3>Account Responsibility</h3><p>You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account.</p><h3>Fair Play</h3><p>All games on our platform are skill-based. Any form of cheating, collusion, or fraudulent activity will result in immediate account suspension and forfeiture of funds.</p><h3>Withdrawals & Payments</h3><p>Withdrawals are subject to identity verification. We reserve the right to withhold funds pending verification or if suspicious activity is detected.</p><h3>Changes to Terms</h3><p>We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the updated terms.</p>'],
+        ['checkout_content', '<h2>Checkout</h2><p>Provide your checkout content here.</p>'],
         ['seo_base_url', 'https://teenpattistars.com'],
         ['seo_default_keywords', 'Teen Patti Stars, Teen Patti, Rummy, online gaming, card games, real cash games, casino India'],
         ['seo_og_image', '/images/Teen-Patti-Stars-Logo.webp'],
@@ -835,6 +836,15 @@ app.get('/privacy-policy', async (req, res) => {
     });
 });
 
+app.get('/checkout', async (req, res) => {
+    const settings = await getSettings();
+    res.render('checkout', {
+        settings,
+        pageTitle: "Checkout",
+        pageDescription: "Checkout page for Teen Patti Stars."
+    });
+});
+
 app.get('/terms-and-conditions', async (req, res) => {
     const settings = await getSettings();
     res.render('terms-and-conditions', {
@@ -1256,7 +1266,7 @@ app.get('/admin/settings', requireAuth, async (req, res) => {
     res.render('admin/settings', { settings, success: false });
 });
 app.post('/admin/settings', requireAuth, upload.any(), (req, res) => {
-    const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions', 'apk_file_url', 'ios_app_url'];
+    const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions', 'apk_file_url', 'ios_app_url', 'checkout_content'];
     const stmt = db.prepare("UPDATE settings SET value = ? WHERE key = ?");
     
     // Update text fields
