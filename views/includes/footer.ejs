@@ -14,7 +14,7 @@
                     <p class="text-sm leading-relaxed text-slate-500 mb-8">Play skill-based games with secure payments, instant withdrawals, and 24/7 VIP support. The ultimate casino experience.</p>
                     
                     <% if(withdrawalPartners && withdrawalPartners.length > 0) { %>
-                        <div class="flex flex-wrap items-center gap-2 mt-4">
+                        <div class="flex flex-nowrap items-center gap-2 mt-4">
                             <% withdrawalPartners.forEach(partner => { %>
                                 <div class="group relative">
                                     <img src="<%= partner.image_url %>" alt="Withdrawal Partner" class="h-8 w-auto object-contain rounded drop-shadow-md group-hover:scale-110 transition-transform cursor-default">
