@@ -109,35 +109,33 @@
 
             <!-- Right Side Accordion -->
             <div class="lg:col-span-7 space-y-4 pt-4 lg:pt-10">
-                <% const displayFaqs=(faqs && faqs.length> 0) ? faqs : [
-                    { question: "I forgot my password. What should I do?", answer: "Click on 'Forgot Password' on the login page and follow the instructions sent to your email." },
-                    { question: "How do I verify my account?", answer: "Upload your ID and utility bill in the profile section to complete the KYC verification." },
-                    { question: "Can I have more than one account?", answer: "No, our terms of service strictly prohibit having multiple accounts per user." },
-                    { question: "Why is my withdrawal pending?", answer: "Withdrawals typically take 24-48 hours to process. If it takes longer, please contact support." },
-                    { question: "What are your support hours?", answer: "Our live chat and email support are available 24/7." }
-                    ];
-
-                    displayFaqs.forEach((faq, index) => { %>
-                    <div class="border border-[#06427a] bg-[#022448] rounded-xl overflow-hidden shadow-sm group">
-                        <button type="button"
-                            class="w-full flex justify-between items-center p-5 text-left focus:outline-none"
-                            onclick="toggleContactFaq('<%= index %>')">
-                            <span class="font-semibold text-white text-lg pr-4">
-                                <%= faq.question %>
-                            </span>
-                            <div class="w-8 h-8 rounded bg-[#06427a] flex items-center justify-center text-secondary transform transition-transform duration-300"
-                                id="contact-icon-<%= index %>">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </div>
-                        </button>
-                        <div class="max-h-0 overflow-hidden transition-all duration-300"
-                            id="contact-content-<%= index %>">
-                            <div class="p-5 pt-0 text-slate-300 leading-relaxed border-t border-[#06427a] mt-2 pt-4">
-                                <%= faq.answer %>
+                <% if(faqs && faqs.length > 0) { %>
+                    <% faqs.forEach((faq, index) => { %>
+                        <div class="border border-[#06427a] bg-[#022448] rounded-xl overflow-hidden shadow-sm group">
+                            <button type="button"
+                                class="w-full flex justify-between items-center p-5 text-left focus:outline-none"
+                                onclick="toggleContactFaq('<%= index %>')">
+                                <span class="font-semibold text-white text-lg pr-4">
+                                    <%= faq.question %>
+                                </span>
+                                <div class="w-8 h-8 rounded bg-[#06427a] flex items-center justify-center text-secondary transform transition-transform duration-300"
+                                    id="contact-icon-<%= index %>">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </button>
+                            <div class="max-h-0 overflow-hidden transition-all duration-300"
+                                id="contact-content-<%= index %>">
+                                <div class="p-5 pt-0 text-slate-300 leading-relaxed border-t border-[#06427a] mt-2 pt-4">
+                                    <%= faq.answer %>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <% }) %>
+                <% } else { %>
+                    <div class="text-center py-12 bg-[#022448] rounded-xl border border-[#06427a]">
+                        <p class="text-white/50">No FAQs have been added yet.</p>
+                    </div>
+                <% } %>
             </div>
 
         </div>
