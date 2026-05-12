@@ -313,6 +313,7 @@ db.serialize(() => {
         title TEXT NOT NULL,
         description TEXT NOT NULL,
         image_url TEXT,
+        image_url_2 TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
@@ -325,6 +326,8 @@ db.serialize(() => {
     db.run("ALTER TABLE promotions ADD COLUMN external_link TEXT DEFAULT ''", () => {});
     db.run("ALTER TABLE promotions ADD COLUMN link_text TEXT DEFAULT ''", () => {});
     db.run("ALTER TABLE popup_banners ADD COLUMN title TEXT DEFAULT ''", () => {});
+
+    db.run("ALTER TABLE checkout_steps ADD COLUMN image_url_2 TEXT", () => {});
 
     // Insert or ignore default settings (INSERT OR IGNORE ensures new keys are added without overwriting existing ones)
     const defaults = [
@@ -1540,12 +1543,13 @@ app.get('/admin/checkout-steps', requireAuth, (req, res) => {
     });
 });
 
-app.post('/admin/checkout-steps', requireAuth, upload.single('image'), (req, res) => {
+app.post('/admin/checkout-steps', requireAuth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), (req, res) => {
     const { step_number, title, description } = req.body;
-    const image_url = req.file ? '/uploads/' + req.file.filename : null;
+    const image_url = req.files && req.files['image'] ? '/uploads/' + req.files['image'][0].filename : null;
+    const image_url_2 = req.files && req.files['image2'] ? '/uploads/' + req.files['image2'][0].filename : null;
     
-    db.run("INSERT INTO checkout_steps (step_number, title, description, image_url) VALUES (?, ?, ?, ?)", 
-        [step_number || 1, title, description, image_url], (err) => {
+    db.run("INSERT INTO checkout_steps (step_number, title, description, image_url, image_url_2) VALUES (?, ?, ?, ?, ?)", 
+        [step_number || 1, title, description, image_url, image_url_2], (err) => {
         logActivity('Add Checkout Step', `Added step: ${title}`);
         res.redirect('/admin/checkout-steps');
     });
@@ -1558,12 +1562,13 @@ app.get('/admin/checkout-steps/edit/:id', requireAuth, (req, res) => {
     });
 });
 
-app.post('/admin/checkout-steps/edit/:id', requireAuth, upload.single('image'), (req, res) => {
-    const { step_number, title, description, existing_image } = req.body;
-    const image_url = req.file ? '/uploads/' + req.file.filename : existing_image;
+app.post('/admin/checkout-steps/edit/:id', requireAuth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), (req, res) => {
+    const { step_number, title, description, existing_image, existing_image_2 } = req.body;
+    const image_url = req.files && req.files['image'] ? '/uploads/' + req.files['image'][0].filename : existing_image;
+    const image_url_2 = req.files && req.files['image2'] ? '/uploads/' + req.files['image2'][0].filename : existing_image_2;
     
-    db.run("UPDATE checkout_steps SET step_number = ?, title = ?, description = ?, image_url = ? WHERE id = ?", 
-        [step_number || 1, title, description, image_url, req.params.id], (err) => {
+    db.run("UPDATE checkout_steps SET step_number = ?, title = ?, description = ?, image_url = ?, image_url_2 = ? WHERE id = ?", 
+        [step_number || 1, title, description, image_url, image_url_2, req.params.id], (err) => {
         logActivity('Edit Checkout Step', `Updated step: ${title}`);
         res.redirect('/admin/checkout-steps');
     });
