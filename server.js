@@ -1210,17 +1210,34 @@ app.get('/admin/settings', requireAuth, async (req, res) => {
     const settings = await getSettings();
     res.render('admin/settings', { settings, success: false });
 });
-app.post('/admin/settings', requireAuth, (req, res) => {
+app.post('/admin/settings', requireAuth, upload.any(), (req, res) => {
     const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions'];
     const stmt = db.prepare("UPDATE settings SET value = ? WHERE key = ?");
+    
+    // Update text fields
     keys.forEach(k => {
         if (req.body[k] !== undefined) stmt.run([req.body[k], k]);
     });
+
+    // Handle file uploads directly to settings keys
+    if (req.files && req.files.length > 0) {
+        req.files.forEach(file => {
+            if (keys.includes(file.fieldname)) {
+                stmt.run(['/uploads/' + file.filename, file.fieldname]);
+            }
+        });
+    }
+
     stmt.finalize(() => {
         logActivity('Update Settings', 'Site settings updated');
-        getSettings().then(settings => {
-            res.render('admin/settings', { settings, success: true });
-        });
+        const referrer = req.get('Referrer');
+        if (referrer && referrer.includes('/admin/contact-page')) {
+            res.redirect('/admin/contact-page');
+        } else {
+            getSettings().then(settings => {
+                res.render('admin/settings', { settings, success: true });
+            });
+        }
     });
 });
 
