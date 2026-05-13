@@ -58,6 +58,14 @@
         
         <div class="lg:col-span-1 relative z-10">
             <div class="sticky top-28 space-y-8">
+                <!-- Table of Contents -->
+                <div id="toc-widget" class="bg-accent/80 backdrop-blur-md rounded-2xl border border-secondary/20 p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] hidden">
+                    <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Table of Contents</h3>
+                    <ul id="toc-list" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
                 <!-- Categories Dropdown -->
                 <div class="bg-accent/80 backdrop-blur-md rounded-2xl border border-secondary/20 p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                     <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Categories</h3>
@@ -97,5 +105,68 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const contentDiv = document.querySelector('.prose');
+        const tocWidget = document.getElementById('toc-widget');
+        const tocList = document.getElementById('toc-list');
+        
+        if (!contentDiv) return;
+        
+        const headings = contentDiv.querySelectorAll('h1, h2, h3');
+        if (headings.length === 0) return;
+        
+        // Show widget since we have headings
+        tocWidget.classList.remove('hidden');
+        
+        headings.forEach((heading, index) => {
+            // Ensure heading has an ID
+            if (!heading.id) {
+                heading.id = 'heading-' + index;
+            }
+            
+            const li = document.createElement('li');
+            
+            // Indentation
+            if (heading.tagName === 'H2') li.classList.add('ml-4');
+            if (heading.tagName === 'H3') li.classList.add('ml-8');
+            
+            const a = document.createElement('a');
+            a.href = '#' + heading.id;
+            a.textContent = heading.textContent;
+            a.className = 'text-slate-300 hover:text-secondary transition-colors text-sm font-bold flex items-center gap-2';
+            
+            // Add a subtle bullet indicator
+            if (heading.tagName === 'H1') {
+                a.innerHTML = `<i class="fa-solid fa-angle-right text-secondary text-xs"></i> ${heading.textContent}`;
+            } else {
+                a.innerHTML = `<span class="w-1.5 h-1.5 bg-secondary/50 rounded-full inline-block"></span> ${heading.textContent}`;
+            }
+            
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+        
+        // Smooth scrolling
+        tocList.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    const headerOffset = 120; // Adjust for sticky header
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
 
 <%- include('includes/footer') %>
