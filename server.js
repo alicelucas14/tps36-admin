@@ -609,6 +609,127 @@ const getWithdrawalPartners = () => {
     });
 };
 
+// ================= LIVE CHAT API =================
+
+app.get('/api/chat-data', async (req, res) => {
+    const settings = await getSettings();
+    res.json({
+        enabled: settings['chat_enabled'] === '1',
+        botName: settings['chat_bot_name'] || 'Support Bot',
+        agentName: settings['chat_agent_name'] || 'Live Agent',
+        avatar: settings['chat_avatar'] || '',
+        welcomeMessage: settings['chat_welcome_message'] || 'Hello! How can I help you today?'
+    });
+});
+
+app.post('/api/chat/session', (req, res) => {
+    const existingId = req.body.sessionId;
+    if (existingId) {
+        db.get("SELECT session_id, status FROM chat_sessions WHERE session_id = ?", [existingId], (err, session) => {
+            if (session) return res.json({ sessionId: session.session_id, status: session.status });
+            createNewSession();
+        });
+    } else {
+        createNewSession();
+    }
+    
+    function createNewSession() {
+        const sessionId = require('crypto').randomUUID();
+        db.run("INSERT INTO chat_sessions (session_id, status) VALUES (?, 'bot')", [sessionId], () => {
+            res.json({ sessionId, status: 'bot' });
+        });
+    }
+});
+
+app.get('/api/chat/stream/:sessionId', (req, res) => {
+    const sid = req.params.sessionId;
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
+    res.write(`data: ${JSON.stringify({type: 'connected'})}\n\n`);
+    sseClients[sid] = res;
+    req.on('close', () => { delete sseClients[sid]; });
+});
+
+app.post('/api/chat/send', async (req, res) => {
+    const { sessionId, message } = req.body;
+    if (!sessionId || !message) return res.status(400).json({ error: 'Missing data' });
+
+    db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'user', ?)", [sessionId, message]);
+
+    db.get("SELECT status FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
+        if (!session) return res.status(404).json({ error: 'Session not found' });
+        
+        if (session.status === 'agent') {
+            // Forward directly to Telegram
+            const settings = await getSettings();
+            const token = settings['telegram_bot_token'];
+            const agentChatId = settings['telegram_agent_chat_id'];
+            if (token && agentChatId) {
+                await sendToTelegram(token, agentChatId, `<b>User says:</b>\n${message}`);
+            }
+            return res.json({ type: 'forwarded' });
+        } else {
+            // Bot logic
+            const msgLower = message.toLowerCase();
+            const triggers = ['agent', 'human', 'speak to someone', 'talk to someone', 'live support', 'real person', 'representative', 'operator'];
+            if (triggers.some(t => msgLower.includes(t))) {
+                db.run("UPDATE chat_sessions SET status = 'agent' WHERE session_id = ?", [sessionId]);
+                
+                const settings = await getSettings();
+                const token = settings['telegram_bot_token'];
+                const agentChatId = settings['telegram_agent_chat_id'];
+                if (token && agentChatId) {
+                    await sendToTelegram(token, agentChatId, `🚨 <b>Agent Requested!</b>\nA user requested human support.\nUser says: ${message}`);
+                }
+                const reply = "I am transferring you to a human agent. They will reply here shortly.";
+                db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'bot', ?)", [sessionId, reply]);
+                return res.json({ type: 'bot', message: reply, escalated: true });
+            }
+
+            // Check QA
+            db.all("SELECT * FROM chat_qa", (err, qaRows) => {
+                let reply = "I'm not sure about that. Try asking something else, or ask to speak to an agent.";
+                for (const row of (qaRows || [])) {
+                    if (msgLower.includes(row.keyword.toLowerCase())) {
+                        reply = row.answer;
+                        break;
+                    }
+                }
+                db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'bot', ?)", [sessionId, reply]);
+                res.json({ type: 'bot', message: reply, escalated: false });
+            });
+        }
+    });
+});
+
+app.post('/api/chat/upload', upload.single('image'), async (req, res) => {
+    const { sessionId } = req.body;
+    if (!req.file || !sessionId) return res.status(400).json({ error: 'Upload failed' });
+    
+    const imageUrl = `/uploads/${req.file.filename}`;
+    db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'user', ?)", [sessionId, `[IMAGE:${imageUrl}]`]);
+    
+    // Check if in agent mode to forward image
+    db.get("SELECT status FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
+        if (session && session.status === 'agent') {
+            const settings = await getSettings();
+            const token = settings['telegram_bot_token'];
+            const agentChatId = settings['telegram_agent_chat_id'];
+            if (token && agentChatId) {
+                // Send an image link to Telegram
+                const host = req.protocol + '://' + req.get('host');
+                await sendToTelegram(token, agentChatId, `<b>User sent an image:</b>\n${host}${imageUrl}`);
+            }
+        }
+    });
+
+    res.json({ url: imageUrl });
+});
+
+
 // ================= PUBLIC ROUTES =================
 app.get('/', async (req, res) => {
     const settings = await getSettings();
