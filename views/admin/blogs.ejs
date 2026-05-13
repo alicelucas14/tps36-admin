@@ -79,7 +79,10 @@
                 <td class="px-6 py-4 font-medium"><%= blog.title %></td>
                 <td class="px-6 py-4"><span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full"><%= blog.status %></span></td>
                 <td class="px-6 py-4 text-right">
-                    <a href="/admin/blogs?edit_id=<%= blog.id %>" class="text-blue-500 hover:text-blue-700 mr-3"><i class="fa-solid fa-pen"></i></a>
+                    <!-- Preview Link -->
+                    <a href="/<%= blog.slug %>" target="_blank" class="text-gray-500 hover:text-gray-700 mr-3" title="Preview Blog"><i class="fa-solid fa-eye"></i></a>
+                    <!-- Edit Link -->
+                    <a href="/admin/blogs?edit_id=<%= blog.id %>" class="text-blue-500 hover:text-blue-700 mr-3" title="Edit Blog"><i class="fa-solid fa-pen"></i></a>
                     <form method="POST" action="/admin/blogs" class="inline">
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="id" value="<%= blog.id %>">
