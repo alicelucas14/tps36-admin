@@ -27,9 +27,9 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#001328', secondary: '#00f5ff', accent: '#001c3d' },
+                    colors: { primary: '#001328', secondary: '#FFF200', accent: '#001c3d' },
                     fontFamily: { sans: ['Montserrat', 'sans-serif'] },
-                    boxShadow: { 'neon': '0 0 10px rgba(0, 245, 255, 0.5), 0 0 20px rgba(0, 245, 255, 0.3)' }
+                    boxShadow: { 'neon': '0 0 10px rgba(255, 242, 0, 0.5), 0 0 20px rgba(255, 242, 0, 0.3)' }
                 }
             }
         }
@@ -54,8 +54,17 @@
         
         /* Make all highlighted (bold) text yellow */
         .prose strong, .prose b, .prose strong span, .prose b span {
-            color: #facc15 !important; /* Tailwind yellow-400 */
+            color: #FFF200 !important;
+            text-shadow: 0 0 10px rgba(255, 242, 0, 0.5) !important;
             font-weight: 800 !important;
+        }
+
+        /* Auto-convert old cyan inline styles to yellow header color */
+        .prose [style*="color: rgb(0, 245, 255)"], 
+        .prose [style*="color:#00f5ff"], 
+        .prose [style*="color: #00f5ff"] {
+            color: #FFF200 !important;
+            text-shadow: 0 0 10px rgba(255, 242, 0, 0.5), 0 0 20px rgba(255, 242, 0, 0.3) !important;
         }
 
         /* Keep headings white */
@@ -93,13 +102,13 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex items-center justify-between h-24">
                 <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                    <img src="/images/Teen-Patti-Stars-Logo.webp" alt="Teen Patti Stars" class="h-12 md:h-16 w-auto drop-shadow-[0_0_8px_rgba(0,245,255,0.5)]">
+                    <img src="/images/Teen-Patti-Stars-Logo.webp" alt="Teen Patti Stars" class="h-12 md:h-16 w-auto drop-shadow-[0_0_8px_rgba(255,242,0,0.5)]">
                     <span class="text-2xl md:text-3xl font-black tracking-wide hidden sm:block text-[#FFF200]" style="text-shadow: 0 4px 6px rgba(0,0,0,0.5);">Teen Patti <span style="text-shadow: 0 4px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,242,0,0.8), 0 0 40px rgba(255,242,0,0.4);">Stars</span></span>
                 </a>
                 
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center gap-8 text-sm font-bold text-gray-300 uppercase tracking-widest">
-                    <a href="/" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">Home</a>
+                    <a href="/" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(255,242,0,0.8)] transition-all">Home</a>
                     
                     <!-- Pages Dropdown -->
                     <div class="relative group">
@@ -121,8 +130,8 @@
                         </div>
                     </div>
                     
-                    <a href="/#about-us" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">About</a>
-                    <a href="/contact" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">Contact</a>
+                    <a href="/#about-us" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(255,242,0,0.8)] transition-all">About</a>
+                    <a href="/contact" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(255,242,0,0.8)] transition-all">Contact</a>
                     <a href="<%= settings['apk_file_url'] || '#' %>" class="bg-secondary text-primary px-8 py-3 rounded-full font-black hover:bg-white hover:text-primary transition-all transform hover:scale-105 ml-4 shadow-neon tracking-wider">PLAY NOW</a>
                 </div>
                 
