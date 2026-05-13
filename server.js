@@ -25,7 +25,7 @@ try {
 
 // Configure Multer for File Uploads
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'public/uploads/'),
+    destination: (req, file, cb) => cb(null, path.join(__dirname, 'public/uploads/')),
     filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
@@ -33,7 +33,7 @@ const upload = multer({ storage });
 const app = express();
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Note: CATEGORIES is now moved to the database for dynamic management.
 // We will initialize it in the DB seeding block below.
