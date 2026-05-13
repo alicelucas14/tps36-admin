@@ -620,7 +620,9 @@ app.get('/', async (req, res) => {
                             recentReviews: recentReviews || [],
                             faqPreview: faqPreview || [],
                             homeAccordions: homeAccordions || [],
-                            popupBanners: popupBanners || []
+                            popupBanners: popupBanners || [],
+                            pageTitle: settings['seo_home_title'],
+                            pageDescription: settings['seo_home_description']
                         });
                     });
                 });
@@ -641,7 +643,15 @@ app.get('/blogs', async (req, res) => {
     const categories = await getCategories();
     db.all("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 4", (err, recentBlogs) => {
         db.all(query, params, (err, blogs) => {
-            res.render('blogs', { settings, blogs: blogs || [], categories, currentCategory: category || 'All', recentBlogs: recentBlogs || [] });
+            res.render('blogs', { 
+                settings, 
+                blogs: blogs || [], 
+                categories, 
+                currentCategory: category || 'All', 
+                recentBlogs: recentBlogs || [],
+                pageTitle: settings['seo_blogs_title'],
+                pageDescription: settings['seo_blogs_description']
+            });
         });
     });
 });
@@ -649,14 +659,24 @@ app.get('/blogs', async (req, res) => {
 app.get('/reviews', async (req, res) => {
     const settings = await getSettings();
     db.all("SELECT * FROM reviews ORDER BY created_at DESC", (err, reviews) => {
-        res.render('reviews', { settings, reviews: reviews || [] });
+        res.render('reviews', { 
+            settings, 
+            reviews: reviews || [],
+            pageTitle: settings['seo_reviews_title'],
+            pageDescription: settings['seo_reviews_description']
+        });
     });
 });
 
 app.get('/faq', async (req, res) => {
     const settings = await getSettings();
     db.all("SELECT * FROM faqs ORDER BY created_at ASC", (err, faqs) => {
-        res.render('faq', { settings, faqs: faqs || [] });
+        res.render('faq', { 
+            settings, 
+            faqs: faqs || [],
+            pageTitle: settings['seo_faq_title'],
+            pageDescription: settings['seo_faq_description']
+        });
     });
 });
 
@@ -666,7 +686,15 @@ app.get('/blog/:slug', async (req, res) => {
     db.all("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 4", (err, recentBlogs) => {
         db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], (err, blog) => {
             if (!blog) return res.send('Blog not found!');
-            res.render('blog_single', { blog, settings, categories, currentCategory: blog.category || 'General', recentBlogs: recentBlogs || [] });
+            res.render('blog_single', { 
+                blog, 
+                settings, 
+                categories, 
+                currentCategory: blog.category || 'General', 
+                recentBlogs: recentBlogs || [],
+                pageTitle: blog.title,
+                pageDescription: blog.content.replace(/<[^>]+>/g, '').substring(0, 150).trim() + '...'
+            });
         });
     });
 });
