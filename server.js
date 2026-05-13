@@ -680,12 +680,18 @@ app.get('/faq', async (req, res) => {
     });
 });
 
-app.get('/blog/:slug', async (req, res) => {
-    const settings = await getSettings();
-    const categories = await getCategories();
-    db.all("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 4", (err, recentBlogs) => {
-        db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], (err, blog) => {
-            if (!blog) return res.send('Blog not found!');
+app.get('/:slug', async (req, res, next) => {
+    // Ignore static files and API/admin routes to prevent unnecessary DB queries
+    if (req.params.slug.includes('.') || req.params.slug.startsWith('api') || req.params.slug.startsWith('admin')) {
+        return next();
+    }
+
+    db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], async (err, blog) => {
+        if (!blog) return next(); // Not a blog post, pass to next matching route
+
+        const settings = await getSettings();
+        const categories = await getCategories();
+        db.all("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 4", (err, recentBlogs) => {
             res.render('blog_single', { 
                 blog, 
                 settings, 
@@ -956,7 +962,7 @@ app.get('/sitemap.xml', (req, res) => {
         if (blogs) {
             blogs.forEach(blog => {
                 const date = new Date(blog.created_at).toISOString().split('T')[0];
-                xml += `  <url>\n    <loc>${baseUrl}/blog/${blog.slug}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+                xml += `  <url>\n    <loc>${baseUrl}/${blog.slug}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
             });
         }
         

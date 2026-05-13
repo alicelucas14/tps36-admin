@@ -32,7 +32,7 @@
                             <%- blog.content.replace(/<[^>]+>/g, '') %>
                         </div>
                         <div class="mt-auto">
-                            <a href="/blog/<%= blog.slug %>" class="inline-block border border-secondary text-secondary font-bold py-3 px-8 rounded hover:bg-secondary hover:text-primary transition-all tracking-widest uppercase text-sm w-full text-center">Read More</a>
+                            <a href="/<%= blog.slug %>" class="inline-block border border-secondary text-secondary font-bold py-3 px-8 rounded hover:bg-secondary hover:text-primary transition-all tracking-widest uppercase text-sm w-full text-center">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                     <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Recent News</h3>
                     <div class="space-y-6">
                         <% recentBlogs.forEach(rb => { %>
-                            <a href="/blog/<%= rb.slug %>" class="group flex items-center gap-4 hover:-translate-y-1 transition-transform">
+                            <a href="/<%= rb.slug %>" class="group flex items-center gap-4 hover:-translate-y-1 transition-transform">
                                 <% if(rb.image_url) { %>
                                     <img src="<%= rb.image_url %>" alt="<%= rb.title %>" class="w-16 h-16 object-cover rounded-lg border border-secondary/20 group-hover:border-secondary transition-colors" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=200&auto=format&fit=crop';">
                                 <% } else { %>
