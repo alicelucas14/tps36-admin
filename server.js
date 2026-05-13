@@ -1267,14 +1267,15 @@ app.get('/admin', requireAuth, (req, res) => {
 });
 
 // ADMIN: Rich Text Image Upload
-app.post('/admin/upload-image', requireAuth, upload.single('image'), (req, res) => {
-    if (!req.file) {
+app.post('/admin/upload-image', requireAuth, upload.any(), (req, res) => {
+    const file = req.files && req.files.length > 0 ? req.files[0] : null;
+    if (!file) {
         return res.status(400).json({ uploaded: 0, error: { message: 'No image uploaded' } });
     }
     res.json({ 
         uploaded: 1, 
-        fileName: req.file.filename,
-        url: '/uploads/' + req.file.filename 
+        fileName: file.filename,
+        url: '/uploads/' + file.filename 
     });
 });
 
