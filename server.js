@@ -1267,16 +1267,11 @@ app.get('/admin', requireAuth, (req, res) => {
 });
 
 // ADMIN: Rich Text Image Upload
-app.post('/admin/upload-image', requireAuth, upload.any(), (req, res) => {
-    const file = req.files && req.files.length > 0 ? req.files[0] : null;
-    if (!file) {
-        return res.status(400).json({ uploaded: 0, error: { message: 'No image uploaded' } });
+app.post('/admin/upload-image', requireAuth, upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No image uploaded' });
     }
-    res.json({ 
-        uploaded: 1, 
-        fileName: file.filename,
-        url: '/uploads/' + file.filename 
-    });
+    res.json({ url: '/uploads/' + req.file.filename });
 });
 
 // ADMIN: Blogs
