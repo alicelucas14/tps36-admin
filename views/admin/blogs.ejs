@@ -1,16 +1,6 @@
 <%- include('includes/header') %>
 
-<!-- Quill Rich Text Editor -->
-<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
-<style>
-    .ql-toolbar {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        background: white;
-    }
-</style>
+<!-- CKEditor 4 will be loaded dynamically -->
 
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-gray-800">Manage Blogs</h1>
@@ -50,8 +40,7 @@
         <!-- Rich Text Editor -->
         <div>
             <label class="block text-sm font-medium mb-2">Content <span class="text-xs text-blue-500 font-normal">(Select text → click 🔗 in toolbar to add a hyperlink)</span></label>
-            <div id="blog-editor" style="min-height: 200px; background: white;" class="border rounded-lg"></div>
-            <input type="hidden" name="content" id="blog-content">
+            <textarea name="content" id="blog-content" required class="w-full"></textarea>
         </div>
 
         <div class="flex items-center gap-4">
@@ -95,71 +84,20 @@
     </table>
 </div>
 
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
-    function imageHandler() {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-
-        input.onchange = async () => {
-            const file = input.files[0];
-            const formData = new FormData();
-            formData.append('image', file);
-
-            try {
-                const response = await fetch('/admin/upload-image', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-                
-                if (result.url) {
-                    const range = quill.getSelection(true);
-                    quill.insertEmbed(range.index, 'image', result.url);
-                } else {
-                    alert('Upload failed: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                alert('Image upload failed.');
-            }
-        };
-    }
-
-    const AlignStyle = Quill.import('attributors/style/align');
-    Quill.register(AlignStyle, true);
-
-    const quill = new Quill('#blog-editor', {
-        theme: 'snow',
-        modules: {
-            toolbar: {
-                container: [
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'header': [1, 2, 3, false] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'align': [] }],
-                    ['link', 'image'],
-                    ['blockquote', 'code-block'],
-                    ['clean']
-                ],
-                handlers: {
-                    image: imageHandler
-                }
-            }
-        },
-        placeholder: 'Write your blog content here... Select any text and click the 🔗 link icon or image icon in the toolbar.'
+    CKEDITOR.replace('blog-content', {
+        height: 350,
+        filebrowserUploadUrl: '/admin/upload-image',
+        filebrowserUploadMethod: 'form',
+        removeButtons: 'PasteFromWord', // Helps with clean pasting
+        extraPlugins: 'table,tabletools'
     });
 
     // Pre-fill content when editing
     <% if(typeof editItem !== 'undefined' && editItem && editItem.content) { %>
-        quill.root.innerHTML = `<%- typeof editItem !== 'undefined' && editItem ? editItem.content.replace(/`/g, '\\`') : '' %>`;
+        CKEDITOR.instances['blog-content'].setData(`<%- editItem.content.replace(/`/g, '\\`') %>`);
     <% } %>
-
-    // On form submit, copy Quill HTML to hidden input
-    document.getElementById('blog-form').addEventListener('submit', function() {
-        document.getElementById('blog-content').value = quill.root.innerHTML;
-    });
 </script>
 
 <%- include('includes/footer') %>
