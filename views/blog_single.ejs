@@ -87,20 +87,23 @@
                     <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-secondary/20 pb-4">Recent News</h3>
                     <div class="space-y-6">
                         <% recentBlogs.forEach(rb => { %>
-                            <a href="/<%= rb.slug %>" class="group flex items-center gap-4 hover:-translate-y-1 transition-transform">
+                            <a href="/<%= rb.slug %>" class="group block bg-primary/30 rounded-xl overflow-hidden border border-secondary/10 hover:border-secondary hover:-translate-y-1 transition-all">
                                 <% if(rb.image_url) { %>
-                                    <img src="<%= rb.image_url %>" alt="<%= rb.title %>" class="w-16 h-16 object-cover rounded-lg border border-secondary/20 group-hover:border-secondary transition-colors" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=200&auto=format&fit=crop';">
+                                    <div class="h-32 w-full overflow-hidden relative">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent z-10 opacity-60"></div>
+                                        <img src="<%= rb.image_url %>" alt="<%= rb.title %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=400&auto=format&fit=crop';">
+                                    </div>
                                 <% } else { %>
-                                    <div class="w-16 h-16 bg-primary rounded-lg border border-secondary/20 flex items-center justify-center text-secondary/50 group-hover:border-secondary transition-colors">
-                                        <i class="fa-solid fa-image"></i>
+                                    <div class="h-32 w-full bg-primary flex items-center justify-center text-secondary/30 group-hover:text-secondary/60 transition-colors">
+                                        <i class="fa-solid fa-image text-3xl"></i>
                                     </div>
                                 <% } %>
-                                <div>
-                                    <h4 class="text-white font-bold text-sm leading-tight group-hover:text-secondary transition-colors line-clamp-2"><%= rb.title %></h4>
-                                    <p class="text-secondary/60 text-xs font-bold tracking-wider uppercase mt-1 flex items-center gap-3">
-                                        <span><%= new Date(rb.created_at).toLocaleDateString() %></span>
-                                        <span><i class="fa-solid fa-eye"></i> <%= rb.views || 0 %></span>
-                                    </p>
+                                <div class="p-4">
+                                    <h4 class="text-white font-bold text-sm leading-snug group-hover:text-secondary transition-colors line-clamp-2"><%= rb.title %></h4>
+                                    <div class="flex items-center justify-between mt-3">
+                                        <p class="text-secondary/60 text-xs font-bold tracking-wider uppercase"><%= new Date(rb.created_at).toLocaleDateString() %></p>
+                                        <p class="text-secondary/60 text-xs font-bold tracking-wider flex items-center gap-1"><i class="fa-solid fa-eye"></i> <%= rb.views || 0 %></p>
+                                    </div>
                                 </div>
                             </a>
                         <% }) %>

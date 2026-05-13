@@ -1164,9 +1164,8 @@ app.post('/admin/blogs', requireAuth, upload.single('image'), (req, res) => {
     } else if (req.body.action === 'edit') {
         const { id, title, content, existing_image, category, external_link, link_text } = req.body;
         const image_url = req.file ? '/uploads/' + req.file.filename : existing_image;
-        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + (Math.random()*1000|0);
-        db.run("UPDATE blogs SET title = ?, slug = ?, content = ?, image_url = ?, category = ? WHERE id = ?",
-            [title, slug, content, image_url, category || 'General', id], (err) => {
+        db.run("UPDATE blogs SET title = ?, content = ?, image_url = ?, category = ? WHERE id = ?",
+            [title, content, image_url, category || 'General', id], (err) => {
             // Also try to update rich text fields (safe - ignores if columns don't exist)
             if (!err) db.run("UPDATE blogs SET external_link = ?, link_text = ? WHERE id = ?", [external_link || '', link_text || '', id], () => {});
             if (err) console.error(err);
