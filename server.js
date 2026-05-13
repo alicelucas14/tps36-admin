@@ -64,6 +64,42 @@ app.use((req, res, next) => {
     next();
 });
 
+// ── Rate Limiter & Malicious Blocker ──────────────────────────
+const requestCounts = new Map();
+app.use((req, res, next) => {
+    // 1. Block obvious malicious paths (directory traversal, common exploits)
+    const maliciousPaths = [/\.\.\//i, /\.env/i, /\.git/i, /wp-admin/i, /phpmyadmin/i, /<script>/i];
+    if (maliciousPaths.some(pattern => pattern.test(req.url))) {
+        return res.status(403).send('Forbidden: Malicious path detected.');
+    }
+
+    // 2. Simple Rate Limiting (100 requests per minute per IP)
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    const windowMs = 60 * 1000;
+    const maxRequests = 100;
+
+    let userObj = requestCounts.get(ip);
+    if (!userObj || userObj.resetTime < now) {
+        userObj = { count: 1, resetTime: now + windowMs };
+        requestCounts.set(ip, userObj);
+    } else {
+        userObj.count++;
+        if (userObj.count > maxRequests) {
+            return res.status(429).send('Too Many Requests. Please try again later.');
+        }
+    }
+    
+    // Clean up map occasionally to prevent memory leak
+    if (Math.random() < 0.01) {
+        for (const [key, val] of requestCounts.entries()) {
+            if (val.resetTime < now) requestCounts.delete(key);
+        }
+    }
+    
+    next();
+});
+
 // Inject current path for active link highlighting and global public data
 app.use((req, res, next) => {
     res.locals.path = req.path;
