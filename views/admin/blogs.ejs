@@ -124,6 +124,9 @@
         };
     }
 
+    const AlignStyle = Quill.import('attributors/style/align');
+    Quill.register(AlignStyle, true);
+
     const quill = new Quill('#blog-editor', {
         theme: 'snow',
         modules: {
