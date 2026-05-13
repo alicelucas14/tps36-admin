@@ -26,6 +26,43 @@
         </div>
 
         <div>
+            <h3 class="text-lg font-bold border-b pb-2 mb-4">Homepage Hero Section</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium mb-1">Badge Text (Top)</label>
+                    <input type="text" name="hero_badge_text" value="<%= settings['hero_badge_text'] %>" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium mb-1">Hero Image</label>
+                    <input type="file" name="hero_image" accept="image/*" class="w-full border rounded px-3 py-2 bg-white">
+                    <% if(settings['hero_image']) { %>
+                        <p class="text-xs text-gray-500 mt-1">Current: <a href="<%= settings['hero_image'] %>" target="_blank" class="text-blue-500 underline"><%= settings['hero_image'].split('/').pop() %></a></p>
+                    <% } %>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium mb-1">Hero Title (HTML allowed for styling)</label>
+                    <textarea name="hero_title" rows="2" class="w-full border rounded px-3 py-2 font-mono text-sm"><%= settings['hero_title'] %></textarea>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium mb-1">Hero Subtitle (HTML allowed for styling)</label>
+                    <textarea name="hero_subtitle" rows="3" class="w-full border rounded px-3 py-2 font-mono text-sm"><%= settings['hero_subtitle'] %></textarea>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium mb-1">Button 1 Text (Download)</label>
+                    <input type="text" name="hero_button1_text" value="<%= settings['hero_button1_text'] %>" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium mb-1">Button 2 Text (Learn More)</label>
+                    <input type="text" name="hero_button2_text" value="<%= settings['hero_button2_text'] %>" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium mb-1">Bonus Text (Below buttons)</label>
+                    <input type="text" name="hero_bonus_text" value="<%= settings['hero_bonus_text'] %>" class="w-full border rounded px-3 py-2">
+                </div>
+            </div>
+        </div>
+
+        <div>
             <h3 class="text-lg font-bold border-b pb-2 mb-4">Mobile Applications</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
                 <div>

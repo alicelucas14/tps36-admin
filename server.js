@@ -414,7 +414,14 @@ db.serialize(() => {
         ['telegram_agent_chat_id', ''],
         ['admin_registration_key', 'TPS-ADMIN-2024'],
         ['apk_file_url', '#'],
-        ['ios_app_url', '#']
+        ['ios_app_url', '#'],
+        ['hero_badge_text', 'Welcome to the VIP Club'],
+        ['hero_title', 'Teen Patti <br/> <span style="text-shadow: 0 4px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,242,0,0.8), 0 0 40px rgba(255,242,0,0.4);">Stars</span>'],
+        ['hero_subtitle', 'Experience the ultimate thrill. Play real cash <strong class="text-white">Teen Patti</strong> and <strong class="text-white">Rummy</strong> with VIP tables, instant withdrawals, and elite 24/7 support.'],
+        ['hero_button1_text', 'DOWNLOAD APP'],
+        ['hero_button2_text', 'LEARN MORE'],
+        ['hero_bonus_text', 'Get 100% Cash Bonus on 1st Deposit'],
+        ['hero_image', '/images/hero.png']
     ];
     const defStmt = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
     defaults.forEach(d => defStmt.run(d));
@@ -1488,7 +1495,7 @@ app.get('/admin/settings', requireAuth, async (req, res) => {
     res.render('admin/settings', { settings, success: false });
 });
 app.post('/admin/settings', requireAuth, upload.any(), (req, res) => {
-    const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions', 'apk_file_url', 'ios_app_url', 'checkout_content'];
+    const keys = ['site_name', 'contact_email', 'contact_phone', 'address', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_whatsapp', 'social_youtube', 'social_x', 'social_telegram_channel', 'about_us_content', 'home_accordion_image', 'contact_faq_image', 'privacy_policy', 'terms_conditions', 'apk_file_url', 'ios_app_url', 'checkout_content', 'hero_badge_text', 'hero_title', 'hero_subtitle', 'hero_button1_text', 'hero_button2_text', 'hero_bonus_text', 'hero_image'];
     const stmt = db.prepare("UPDATE settings SET value = ? WHERE key = ?");
     
     // Update text fields
