@@ -370,19 +370,19 @@ db.serialize(() => {
 
     // Insert or ignore default settings (INSERT OR IGNORE ensures new keys are added without overwriting existing ones)
     const defaults = [
-        ['site_name', 'Stars777 Node CMS'],
-        ['contact_email', 'support@stars777.com'],
+        ['site_name', 'Teen Patti Stars Node CMS'],
+        ['contact_email', 'support@teenpattistars.com'],
         ['contact_phone', '+1234567890'],
         ['address', '123 Gaming Street, NY'],
-        ['social_facebook', 'https://facebook.com/stars777'],
-        ['social_twitter', 'https://twitter.com/stars777'],
-        ['social_instagram', 'https://instagram.com/stars777'],
-        ['social_telegram', 'https://t.me/stars777'],
+        ['social_facebook', 'https://facebook.com/teenpattistars'],
+        ['social_twitter', 'https://twitter.com/teenpattistars'],
+        ['social_instagram', 'https://instagram.com/teenpattistars'],
+        ['social_telegram', 'https://t.me/teenpattistars'],
         ['social_whatsapp', 'https://wa.me/1234567890'],
-        ['social_youtube', 'https://youtube.com/@stars777'],
-        ['social_x', 'https://x.com/stars777'],
-        ['social_telegram_channel', 'https://t.me/stars777_channel'],
-        ['about_us_content', `<p>Welcome to <span class="text-white font-bold">Stars777</span> – India's number one choice for online gaming, player happiness, and seamless interaction! Discover why we're featured among the <span class="text-secondary font-bold">top Indian Rummy websites every player should know.</span></p><p>At Stars777, we are passionate about delivering <strong class="text-white font-semibold">the ultimate gaming experience</strong> by offering a diverse range of <strong class="text-white font-semibold">Indian lottery games, skill-based games,</strong> and <strong class="text-white font-semibold">casino entertainment</strong> that includes popular options like Rummy and Teen Patti.</p><p>Our platform is designed for gaming enthusiasts who value <strong class="text-white font-semibold">quick withdrawals, security,</strong> and a trusted environment where <strong class="text-white font-semibold">fun meets fairness.</strong> Whether you're a fan of <strong class="text-white font-semibold">Indian lotteries</strong>, a skilled player of <strong class="text-white font-semibold">Rummy</strong> and <strong class="text-white font-semibold">Teen Patti</strong>, or love the excitement of <strong class="text-white font-semibold">casino games</strong>, Stars777 has something for everyone.</p>` ],
+        ['social_youtube', 'https://youtube.com/@teenpattistars'],
+        ['social_x', 'https://x.com/teenpattistars'],
+        ['social_telegram_channel', 'https://t.me/teenpattistars_channel'],
+        ['about_us_content', `<p>Welcome to <span class="text-white font-bold">Teen Patti Stars</span> – India's number one choice for online gaming, player happiness, and seamless interaction! Discover why we're featured among the <span class="text-secondary font-bold">top Indian Rummy websites every player should know.</span></p><p>At Teen Patti Stars, we are passionate about delivering <strong class="text-white font-semibold">the ultimate gaming experience</strong> by offering a diverse range of <strong class="text-white font-semibold">Indian lottery games, skill-based games,</strong> and <strong class="text-white font-semibold">casino entertainment</strong> that includes popular options like Rummy and Teen Patti.</p><p>Our platform is designed for gaming enthusiasts who value <strong class="text-white font-semibold">quick withdrawals, security,</strong> and a trusted environment where <strong class="text-white font-semibold">fun meets fairness.</strong> Whether you're a fan of <strong class="text-white font-semibold">Indian lotteries</strong>, a skilled player of <strong class="text-white font-semibold">Rummy</strong> and <strong class="text-white font-semibold">Teen Patti</strong>, or love the excitement of <strong class="text-white font-semibold">casino games</strong>, Teen Patti Stars has something for everyone.</p>` ],
         ['home_accordion_image', '/images/hero.png'],
         ['contact_faq_image', '/images/casino_phone_burst.png'],
         ['privacy_policy', '<h2>Privacy Policy</h2><p>Welcome to Teen Patti Stars. We are committed to protecting your personal information and your right to privacy. This policy outlines how we collect, use, and safeguard your data.</p><h3>Information We Collect</h3><p>We may collect information such as your name, email address, phone number, and payment details when you register or interact with our platform.</p><h3>How We Use Your Information</h3><p>Your information is used to process transactions, manage your account, provide customer support, and improve our services.</p><h3>Data Security</h3><p>We implement industry-standard security measures to protect your personal data from unauthorized access, alteration, or disclosure.</p><h3>Contact Us</h3><p>If you have any questions about this Privacy Policy, please contact our support team.</p>'],
@@ -408,7 +408,7 @@ db.serialize(() => {
         ['chat_bot_name', 'Stars Support Bot'],
         ['chat_agent_name', 'Live Agent'],
         ['chat_welcome_message', 'Hey there! 👋 Welcome to Teen Patti Stars! How can I help you today?'],
-        ['chat_telegram_link', 'https://t.me/stars777'],
+        ['chat_telegram_link', 'https://t.me/teenpattistars'],
         ['chat_custom_qa', ''],
         ['telegram_bot_token', ''],
         ['telegram_agent_chat_id', ''],
@@ -419,6 +419,10 @@ db.serialize(() => {
     const defStmt = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
     defaults.forEach(d => defStmt.run(d));
     defStmt.finalize();
+
+    // Force update of legacy branding to new branding in the live database
+    db.run("UPDATE settings SET value = REPLACE(value, 'Stars777', 'Teen Patti Stars') WHERE key IN ('about_us_content', 'site_name')");
+    db.run("UPDATE settings SET value = REPLACE(value, 'stars777', 'teenpattistars') WHERE key IN ('contact_email', 'social_facebook', 'social_twitter', 'social_instagram', 'social_telegram', 'social_youtube', 'social_x', 'social_telegram_channel', 'chat_telegram_link')");
 
     // Default Categories
     const defaultCats = ['General', 'Slots Games', 'Rummy Games', 'Sports', 'Live Casino'];
