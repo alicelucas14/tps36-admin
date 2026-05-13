@@ -166,9 +166,18 @@
         try {
             const r = await fetch('/api/chat/upload', { method: 'POST', body: fd });
             hideTyping();
+            if (!r.ok) {
+                const errText = await r.text();
+                addMsg(`Upload error (${r.status}): ${errText.substring(0, 50)}...`, 'bot');
+                return;
+            }
             const d = await r.json();
             if (d.url) addMsg(`[IMAGE:${d.url}]`, 'user');
-        } catch(e) { hideTyping(); addMsg('Failed to send image. Please try again.', 'bot'); }
+            else addMsg('Failed to process image on server.', 'bot');
+        } catch(e) { 
+            hideTyping(); 
+            addMsg(`Network error: ${e.message}`, 'bot'); 
+        }
     }
 
     // ── DOM helpers ───────────────────────────────────────────
