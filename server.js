@@ -715,7 +715,7 @@ app.post('/api/chat/send', async (req, res) => {
             }
 
             // 2. Check for Deposit Issues
-            const depositKeywords = ['deposit', 'money not showing', 'wallet', 'paid', 'didn\\'t receive', 'not received', 'balance'];
+            const depositKeywords = ['deposit', 'money not showing', 'wallet', 'paid', "didn't receive", 'not received', 'balance'];
             if (depositKeywords.some(t => msgLower.includes(t))) {
                 db.run("UPDATE chat_sessions SET awaiting_screenshot = 1 WHERE session_id = ?", [sessionId]);
                 const reply = "I understand you might be having issues with a deposit. To help you faster, please upload a screenshot of your payment receipt using the paperclip icon below.";
