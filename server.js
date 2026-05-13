@@ -692,8 +692,10 @@ app.get('/:slug', async (req, res, next) => {
     db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], async (err, blog) => {
         if (!blog) return next(); // Not a blog post, pass to next matching route
 
-        // Increment views
-        db.run("UPDATE blogs SET views = views + 1 WHERE id = ?", [blog.id]);
+        // Increment views safely
+        db.run("UPDATE blogs SET views = views + 1 WHERE id = ?", [blog.id], (err) => {
+            if (err) console.error("Error updating views:", err);
+        });
         blog.views = (blog.views || 0) + 1;
 
         const settings = await getSettings();
