@@ -453,6 +453,14 @@ db.serialize(() => {
     const defaultHash = require('crypto').createHash('sha256').update('admin123').digest('hex');
     db.run("INSERT OR IGNORE INTO admin_users (username, password_hash, role) VALUES (?, ?, 'superadmin')", ['admin', defaultHash]);
 
+    // Live Chat Sessions table
+    db.run(`CREATE TABLE IF NOT EXISTS chat_sessions (
+        id TEXT PRIMARY KEY,
+        status TEXT DEFAULT 'bot',
+        awaiting_screenshot INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
     // Default Home Accordions
     db.get("SELECT COUNT(*) as count FROM home_accordions", (err, row) => {
         if (row && row.count === 0) {
@@ -690,6 +698,8 @@ app.post('/api/chat/send', async (req, res) => {
             // Bot logic
             const msgLower = message.toLowerCase();
             const triggers = ['agent', 'human', 'speak to someone', 'talk to someone', 'live support', 'real person', 'representative', 'operator'];
+            
+            // 1. Check for Agent Escalation
             if (triggers.some(t => msgLower.includes(t))) {
                 db.run("UPDATE chat_sessions SET status = 'agent' WHERE session_id = ?", [sessionId]);
                 
@@ -704,7 +714,16 @@ app.post('/api/chat/send', async (req, res) => {
                 return res.json({ type: 'bot', message: reply, escalated: true });
             }
 
-            // Check QA
+            // 2. Check for Deposit Issues
+            const depositKeywords = ['deposit', 'money not showing', 'wallet', 'paid', 'didn\\'t receive', 'not received', 'balance'];
+            if (depositKeywords.some(t => msgLower.includes(t))) {
+                db.run("UPDATE chat_sessions SET awaiting_screenshot = 1 WHERE session_id = ?", [sessionId]);
+                const reply = "I understand you might be having issues with a deposit. To help you faster, please upload a screenshot of your payment receipt using the paperclip icon below.";
+                db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'bot', ?)", [sessionId, reply]);
+                return res.json({ type: 'bot', message: reply, escalated: false });
+            }
+
+            // 3. Check QA
             db.all("SELECT * FROM chat_qa", (err, qaRows) => {
                 let reply = "I'm not sure about that. Try asking something else, or ask to speak to an agent.";
                 for (const row of (qaRows || [])) {
@@ -727,15 +746,31 @@ app.post('/api/chat/upload', upload.single('image'), async (req, res) => {
     const imageUrl = `/uploads/${req.file.filename}`;
     db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'user', ?)", [sessionId, `[IMAGE:${imageUrl}]`]);
     
-    // Check if in agent mode to forward image
-    db.get("SELECT status FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
-        if (session && session.status === 'agent') {
-            const settings = await getSettings();
-            const token = settings['telegram_bot_token'];
-            const agentChatId = settings['telegram_agent_chat_id'];
+    db.get("SELECT status, awaiting_screenshot FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
+        if (!session) return;
+        
+        const settings = await getSettings();
+        const token = settings['telegram_bot_token'];
+        const agentChatId = settings['telegram_agent_chat_id'];
+        const host = req.protocol + '://' + req.get('host');
+
+        // Check if bot was waiting for a screenshot
+        if (session.status === 'bot' && session.awaiting_screenshot) {
+            db.run("UPDATE chat_sessions SET status = 'agent', awaiting_screenshot = 0 WHERE session_id = ?", [sessionId]);
+            
             if (token && agentChatId) {
-                // Send an image link to Telegram
-                const host = req.protocol + '://' + req.get('host');
+                await sendToTelegram(token, agentChatId, `🚨 <b>Deposit Issue Escalation!</b>\nA user uploaded a deposit receipt and was automatically transferred to human support.\n<b>Image:</b>\n${host}${imageUrl}`);
+            }
+            
+            const reply = "Thank you. I have forwarded your receipt to a human agent. They will review it and reply here shortly.";
+            db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'bot', ?)", [sessionId, reply]);
+            
+            // Push message to SSE stream so user sees it immediately
+            pushToClient(sessionId, { sender: 'bot', message: reply, escalated: true });
+        } 
+        // Normal Agent Mode image forward
+        else if (session.status === 'agent') {
+            if (token && agentChatId) {
                 await sendToTelegram(token, agentChatId, `<b>User sent an image:</b>\n${host}${imageUrl}`);
             }
         }
