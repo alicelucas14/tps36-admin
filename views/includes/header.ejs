@@ -38,9 +38,9 @@
         body { font-family: 'Montserrat', sans-serif; }
         
         /* Text alignment fixes for Tailwind Prose and copied content */
-        .ql-align-center, [style*="text-align: center"], [style*="text-align:center"], [align="center"] { text-align: center !important; }
-        .ql-align-right, [style*="text-align: right"], [style*="text-align:right"], [align="right"] { text-align: right !important; }
-        .ql-align-justify, [style*="text-align: justify"], [style*="text-align:justify"], [align="justify"] { text-align: justify !important; }
+        .prose [class*="ql-align-center"], .prose [style*="text-align: center"], .prose [style*="text-align:center"], .prose [align="center"] { text-align: center !important; display: block !important; width: 100% !important; }
+        .prose [class*="ql-align-right"], .prose [style*="text-align: right"], .prose [style*="text-align:right"], .prose [align="right"] { text-align: right !important; display: block !important; width: 100% !important; }
+        .prose [class*="ql-align-justify"], .prose [style*="text-align: justify"], .prose [style*="text-align:justify"], .prose [align="justify"] { text-align: justify !important; display: block !important; width: 100% !important; }
         
         /* Image alignment fixes (Tailwind makes images block-level by default) */
         .prose img, .prose iframe { display: inline-block; }
@@ -63,9 +63,9 @@
             color: #ffffff !important;
         }
         
-        /* Keep links secondary color */
+        /* Make links yellow */
         .prose a, .prose a span {
-            color: #00f5ff !important;
+            color: #facc15 !important;
         }
     </style>
     <% if (settings['seo_google_analytics']) { %>

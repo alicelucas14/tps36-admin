@@ -31,8 +31,9 @@
                         <div class="text-slate-400 line-clamp-3 mb-6 leading-relaxed">
                             <%- blog.content.replace(/<[^>]+>/g, '') %>
                         </div>
-                        <div class="mt-auto">
-                            <a href="/<%= blog.slug %>" class="inline-block border border-secondary text-secondary font-bold py-3 px-8 rounded hover:bg-secondary hover:text-primary transition-all tracking-widest uppercase text-sm w-full text-center">Read More</a>
+                        <div class="mt-auto flex items-center justify-between gap-4">
+                            <a href="/<%= blog.slug %>" class="flex-1 inline-block border border-secondary text-secondary font-bold py-3 px-4 rounded hover:bg-secondary hover:text-primary transition-all tracking-widest uppercase text-sm text-center">Read More</a>
+                            <span class="text-slate-500 font-bold text-sm tracking-wider flex items-center gap-2"><i class="fa-solid fa-eye text-secondary"></i> <%= blog.views || 0 %></span>
                         </div>
                     </div>
                 </div>
@@ -78,7 +79,10 @@
                                 <% } %>
                                 <div>
                                     <h4 class="text-white font-bold text-sm leading-tight group-hover:text-secondary transition-colors line-clamp-2"><%= rb.title %></h4>
-                                    <p class="text-secondary/60 text-xs font-bold tracking-wider uppercase mt-1"><%= new Date(rb.created_at).toLocaleDateString() %></p>
+                                    <p class="text-secondary/60 text-xs font-bold tracking-wider uppercase mt-1 flex items-center gap-3">
+                                        <span><%= new Date(rb.created_at).toLocaleDateString() %></span>
+                                        <span><i class="fa-solid fa-eye"></i> <%= rb.views || 0 %></span>
+                                    </p>
                                 </div>
                             </a>
                         <% }) %>

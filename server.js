@@ -226,6 +226,9 @@ db.serialize(() => {
         status TEXT DEFAULT 'Published',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+    // Add views column if it doesn't exist (fails silently if it does)
+    db.run("ALTER TABLE blogs ADD COLUMN views INTEGER DEFAULT 0", () => {});
+
     db.run(`CREATE TABLE IF NOT EXISTS reviews (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         reviewer_name TEXT NOT NULL,
@@ -688,6 +691,10 @@ app.get('/:slug', async (req, res, next) => {
 
     db.get("SELECT * FROM blogs WHERE slug = ?", [req.params.slug], async (err, blog) => {
         if (!blog) return next(); // Not a blog post, pass to next matching route
+
+        // Increment views
+        db.run("UPDATE blogs SET views = views + 1 WHERE id = ?", [blog.id]);
+        blog.views = (blog.views || 0) + 1;
 
         const settings = await getSettings();
         const categories = await getCategories();

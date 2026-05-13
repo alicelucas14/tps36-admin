@@ -18,6 +18,7 @@
                             <h1 class="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.8)]"><%= blog.title %></h1>
                             <div class="mt-4 text-slate-400 font-medium tracking-wide text-sm flex items-center gap-4">
                                 <span><i class="fa-regular fa-calendar-days text-secondary"></i> <%= new Date(blog.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                                <span><i class="fa-solid fa-eye text-secondary"></i> <%= blog.views || 0 %> Views</span>
                             </div>
                         </div>
                     </div>
@@ -27,6 +28,7 @@
                         <h1 class="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]"><%= blog.title %></h1>
                         <div class="mt-4 text-slate-400 font-medium tracking-wide text-sm flex items-center gap-4">
                             <span><i class="fa-regular fa-calendar-days text-secondary"></i> <%= new Date(blog.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                            <span><i class="fa-solid fa-eye text-secondary"></i> <%= blog.views || 0 %> Views</span>
                         </div>
                     </div>
                 <% } %>
@@ -95,7 +97,10 @@
                                 <% } %>
                                 <div>
                                     <h4 class="text-white font-bold text-sm leading-tight group-hover:text-secondary transition-colors line-clamp-2"><%= rb.title %></h4>
-                                    <p class="text-secondary/60 text-xs font-bold tracking-wider uppercase mt-1"><%= new Date(rb.created_at).toLocaleDateString() %></p>
+                                    <p class="text-secondary/60 text-xs font-bold tracking-wider uppercase mt-1 flex items-center gap-3">
+                                        <span><%= new Date(rb.created_at).toLocaleDateString() %></span>
+                                        <span><i class="fa-solid fa-eye"></i> <%= rb.views || 0 %></span>
+                                    </p>
                                 </div>
                             </a>
                         <% }) %>
