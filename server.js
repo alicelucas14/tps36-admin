@@ -454,10 +454,21 @@ db.serialize(() => {
     db.run("INSERT OR IGNORE INTO admin_users (username, password_hash, role) VALUES (?, ?, 'superadmin')", ['admin', defaultHash]);
 
     // Live Chat Sessions table
-    db.run(`CREATE TABLE IF NOT EXISTS chat_sessions (
-        id TEXT PRIMARY KEY,
+    db.run("DROP TABLE IF EXISTS chat_sessions");
+    db.run("DROP TABLE IF EXISTS chat_messages");
+    
+    db.run(`CREATE TABLE chat_sessions (
+        session_id TEXT PRIMARY KEY,
         status TEXT DEFAULT 'bot',
         awaiting_screenshot INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    db.run(`CREATE TABLE chat_messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id TEXT,
+        sender TEXT,
+        message TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
