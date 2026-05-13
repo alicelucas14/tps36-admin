@@ -12,8 +12,11 @@
 
 <!-- Floating Button -->
 <div id="chat-btn" class="fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-2" style="display:none!important">
-    <div id="chat-bubble-hint" class="bg-[#001c3d] text-white text-sm px-4 py-2 rounded-xl rounded-br-none shadow-lg border border-secondary/30" style="display:none">
+    <div id="chat-bubble-hint" class="bg-[#001c3d] text-white text-sm pl-4 pr-8 py-2 rounded-xl rounded-br-none shadow-lg border border-secondary/30 relative" style="display:none">
         Need help? Chat with us! 👋
+        <button onclick="document.getElementById('chat-bubble-hint').style.display='none'; event.stopPropagation();" class="absolute right-2 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition" title="Dismiss">
+            <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
     </div>
     <button onclick="chatToggle()" id="chat-toggle-btn"
         class="w-16 h-16 rounded-full shadow-[0_0_25px_rgba(0,245,255,0.4)] flex items-center justify-center text-white text-2xl hover:scale-110 transition-all relative overflow-hidden bg-gradient-to-br from-blue-600 to-cyan-500">
