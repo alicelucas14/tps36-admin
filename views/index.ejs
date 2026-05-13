@@ -374,19 +374,29 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <% featuredBlogs.forEach(blog => { %>
-        <div class="bg-accent/60 rounded-xl overflow-hidden border border-secondary/10 hover:border-secondary hover:-translate-y-2 hover:shadow-neon transition-all duration-300 group flex flex-col h-full">
+        <div class="relative rounded-2xl overflow-hidden group hover:-translate-y-2 transition-all duration-500 h-[380px] shadow-lg hover:shadow-[0_0_30px_rgba(250,204,21,0.3)] border border-secondary/10">
+            <div class="absolute inset-0 bg-primary z-0"></div>
             <% if(blog.image_url) { %>
-                <div class="relative overflow-hidden h-48">
-                    <div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors z-10"></div>
-                    <img src="<%= blog.image_url %>" alt="Cover" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=600&auto=format&fit=crop';">
+                <img src="<%= blog.image_url %>" alt="Cover" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 z-0" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=600&auto=format&fit=crop';">
+            <% } else { %>
+                <div class="absolute inset-0 flex items-center justify-center text-secondary/10 z-0">
+                    <i class="fa-solid fa-image text-8xl"></i>
                 </div>
             <% } %>
-            <div class="p-8 flex-1 flex flex-col">
-                <span class="text-xs font-bold text-secondary tracking-widest uppercase mb-3 block"><%= blog.category || 'General' %></span>
-                <h3 class="text-xl font-bold mb-4 text-white group-hover:text-secondary transition-colors line-clamp-2"><%= blog.title %></h3>
-                <div class="mt-auto pt-4 border-t border-slate-700 flex justify-between items-center">
-                    <a href="/<%= blog.slug %>" class="text-slate-400 font-bold hover:text-secondary text-sm uppercase tracking-wider flex items-center gap-2">Read More <i class="fa-solid fa-arrow-right text-xs"></i></a>
-                    <span class="text-slate-500 text-xs font-bold tracking-wider"><i class="fa-solid fa-eye text-secondary/70 mr-1"></i> <%= blog.views || 0 %></span>
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-[#000a14] via-[#000a14]/80 to-transparent z-10"></div>
+            
+            <div class="absolute inset-0 p-6 flex flex-col justify-end z-20">
+                <div class="absolute top-6 left-6">
+                    <span class="bg-[#facc15] text-black text-[10px] font-black px-3 py-1.5 rounded-sm uppercase tracking-widest shadow-[0_0_10px_rgba(250,204,21,0.5)]"><%= blog.category || 'General' %></span>
+                </div>
+                
+                <span class="text-slate-400 text-xs font-bold tracking-widest uppercase mb-2 block"><%= new Date(blog.created_at).toLocaleDateString() %></span>
+                
+                <h3 class="text-xl font-black mb-4 text-white group-hover:text-[#facc15] transition-colors line-clamp-2 leading-tight drop-shadow-md"><%= blog.title %></h3>
+                
+                <div class="mt-auto pt-4 border-t border-white/10">
+                    <a href="/<%= blog.slug %>" class="inline-flex items-center gap-2 text-[#facc15] font-black uppercase tracking-widest text-sm hover:gap-4 transition-all">Read Article <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
