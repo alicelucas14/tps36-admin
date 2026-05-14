@@ -172,7 +172,7 @@
         </div>
 
         <!-- Bottom Legal & Socials -->
-        <div class="pt-8 border-t border-secondary/20 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="pt-2 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="text-sm font-medium text-slate-500">
                 <span>TEEN PATTI STARS © <%= new Date().getFullYear() %>. All rights reserved.</span>
             </div>
@@ -242,6 +242,29 @@
 
 <!-- Dynamic Live Chat Embed Script (Tawk.to, etc.) -->
 <%- settings['chat_embed_script'] || '' %>
+
+<!-- Mobile Floating Download Button -->
+<div id="mobile-floating-download" class="fixed bottom-0 left-0 w-full z-50 p-4 pb-6 transform translate-y-full transition-transform duration-500 md:hidden flex justify-center pointer-events-none">
+    <a href="<%= settings['apk_file_url'] || '#' %>" class="pointer-events-auto w-full max-w-sm bg-gradient-to-r from-[#00f0ff] to-[#0080ff] text-white font-black text-lg py-3.5 rounded-2xl shadow-[0_0_25px_rgba(0,240,255,0.6)] flex items-center justify-center gap-3 border border-[#00f0ff] hover:brightness-110 active:scale-95 transition-all tracking-wider">
+        <i class="fa-solid fa-download text-xl"></i> DOWNLOAD APP
+    </a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const floatingBtn = document.getElementById('mobile-floating-download');
+        if(floatingBtn) {
+            window.addEventListener('scroll', () => {
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                if (scrollPercent > 40) {
+                    floatingBtn.classList.remove('translate-y-full');
+                } else {
+                    floatingBtn.classList.add('translate-y-full');
+                }
+            }, { passive: true });
+        }
+    });
+</script>
 
     </body>
 
