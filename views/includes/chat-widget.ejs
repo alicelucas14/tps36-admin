@@ -18,12 +18,10 @@
             <i class="fa-solid fa-xmark text-xs"></i>
         </button>
     </div>
-    <button onclick="chatToggle()" id="chat-toggle-btn"
+    <a href="#" target="_blank" id="chat-toggle-btn"
         class="w-16 h-16 rounded-full shadow-[0_0_25px_rgba(0,245,255,0.4)] flex items-center justify-center text-white text-2xl hover:scale-110 transition-all relative overflow-hidden bg-gradient-to-br from-blue-600 to-cyan-500">
         <span id="chat-btn-avatar" class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-comments" id="chat-icon"></i></span>
-        <i class="fa-solid fa-xmark hidden absolute text-white text-xl" id="chat-close-icon"></i>
-        <span id="chat-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-bounce">1</span>
-    </button>
+    </a>
 </div>
 
 <!-- Chat Window -->
@@ -83,6 +81,12 @@
     // ── Show button ───────────────────────────────────────────
     const btn = document.getElementById('chat-btn');
     btn.style.cssText = 'display:flex!important;flex-direction:column;align-items:flex-end;gap:8px;position:fixed;bottom:24px;right:24px;z-index:9999;';
+
+    // Set the external link href
+    const toggleBtn = document.getElementById('chat-toggle-btn');
+    if (toggleBtn && cfg.telegramLink) {
+        toggleBtn.href = cfg.telegramLink;
+    }
 
     document.getElementById('chat-bot-name-el').textContent = cfg.botName;
 
