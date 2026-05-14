@@ -1630,7 +1630,7 @@ app.get('/admin/chat', requireAuth, async (req, res) => {
     });
 });
 app.post('/admin/chat', requireAuth, upload.single('chat_avatar_file'), (req, res) => {
-    const keys = ['chat_enabled', 'chat_bot_name', 'chat_agent_name', 'chat_welcome_message', 'chat_telegram_link', 'chat_external_link', 'telegram_bot_token', 'telegram_agent_chat_id'];
+    const keys = ['chat_enabled', 'chat_bot_name', 'chat_agent_name', 'chat_welcome_message', 'chat_embed_script', 'telegram_bot_token', 'telegram_agent_chat_id'];
     keys.forEach(k => {
         db.run("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", [k, req.body[k] || '']);
     });
