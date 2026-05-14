@@ -66,23 +66,19 @@
             <h3 class="text-lg font-bold border-b pb-2 mb-4">Mobile Applications</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
                 <div>
-                    <label class="block text-sm font-semibold mb-1 text-blue-800"><i class="fa-brands fa-android mr-1"></i> Upload Android APK File</label>
+                    <label class="block text-sm font-semibold mb-1 text-blue-800"><i class="fa-brands fa-android mr-1"></i> Android APK Download Link</label>
                     <p class="text-xs text-blue-600 mb-3">Linked to "Download App", "Play Now", and footer buttons.</p>
-                    <input type="file" name="apk_file_url" accept=".apk" class="w-full border border-blue-200 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <input type="text" name="apk_file_url" value="<%= settings['apk_file_url'] !== '#' ? settings['apk_file_url'] : '' %>" placeholder="https://example.com/app.apk" class="w-full border border-blue-200 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <% if(settings['apk_file_url'] && settings['apk_file_url'] !== '#') { %>
-                        <p class="text-sm mt-3 text-green-700 font-medium"><i class="fa-solid fa-circle-check"></i> Currently Active: <a href="<%= settings['apk_file_url'] %>" target="_blank" class="underline"><%= settings['apk_file_url'].split('/').pop() %></a></p>
-                    <% } else { %>
-                        <p class="text-sm mt-3 text-gray-500 font-medium"><i class="fa-solid fa-circle-exclamation"></i> No APK uploaded yet.</p>
+                        <p class="text-sm mt-3 text-green-700 font-medium"><i class="fa-solid fa-circle-check"></i> Currently Active: <a href="<%= settings['apk_file_url'] %>" target="_blank" class="underline truncate inline-block align-bottom max-w-[200px]"><%= settings['apk_file_url'] %></a></p>
                     <% } %>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1 text-blue-800"><i class="fa-brands fa-apple mr-1"></i> Upload iOS App File (.ipa)</label>
+                    <label class="block text-sm font-semibold mb-1 text-blue-800"><i class="fa-brands fa-apple mr-1"></i> iOS App Store Link</label>
                     <p class="text-xs text-blue-600 mb-3">Linked exclusively to the App Store button in the footer.</p>
-                    <input type="file" name="ios_app_url" accept=".ipa" class="w-full border border-blue-200 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <input type="text" name="ios_app_url" value="<%= settings['ios_app_url'] !== '#' ? settings['ios_app_url'] : '' %>" placeholder="https://apps.apple.com/..." class="w-full border border-blue-200 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <% if(settings['ios_app_url'] && settings['ios_app_url'] !== '#') { %>
-                        <p class="text-sm mt-3 text-green-700 font-medium"><i class="fa-solid fa-circle-check"></i> Currently Active: <a href="<%= settings['ios_app_url'] %>" target="_blank" class="underline"><%= settings['ios_app_url'].split('/').pop() %></a></p>
-                    <% } else { %>
-                        <p class="text-sm mt-3 text-gray-500 font-medium"><i class="fa-solid fa-circle-exclamation"></i> No iOS App uploaded yet.</p>
+                        <p class="text-sm mt-3 text-green-700 font-medium"><i class="fa-solid fa-circle-check"></i> Currently Active: <a href="<%= settings['ios_app_url'] %>" target="_blank" class="underline truncate inline-block align-bottom max-w-[200px]"><%= settings['ios_app_url'] %></a></p>
                     <% } %>
                 </div>
             </div>
