@@ -453,18 +453,18 @@ db.serialize(() => {
     const defaultHash = require('crypto').createHash('sha256').update('admin123').digest('hex');
     db.run("INSERT OR IGNORE INTO admin_users (username, password_hash, role) VALUES (?, ?, 'superadmin')", ['admin', defaultHash]);
 
-    // Live Chat Sessions table
-    db.run("DROP TABLE IF EXISTS chat_sessions");
-    db.run("DROP TABLE IF EXISTS chat_messages");
-    
-    db.run(`CREATE TABLE chat_sessions (
+    // Live Chat Sessions table (no longer dropping to preserve sessions)
+    db.run(`CREATE TABLE IF NOT EXISTS chat_sessions (
         session_id TEXT PRIMARY KEY,
         status TEXT DEFAULT 'bot',
         awaiting_screenshot INTEGER DEFAULT 0,
+        telegram_thread_id INTEGER,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+    // Add column if it doesn't exist (for older db files)
+    try { db.run("ALTER TABLE chat_sessions ADD COLUMN telegram_thread_id INTEGER"); } catch(e) {}
 
-    db.run(`CREATE TABLE chat_messages (
+    db.run(`CREATE TABLE IF NOT EXISTS chat_messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         session_id TEXT,
         sender TEXT,
@@ -534,14 +534,37 @@ const crypto = require('crypto');
 const sseClients = {};
 
 // Send a message via Telegram Bot API
-async function sendToTelegram(token, chatId, text) {
+async function sendToTelegram(token, chatId, text, threadId = null) {
     try {
+        const body = { chat_id: chatId, text, parse_mode: 'HTML' };
+        if (threadId) body.message_thread_id = threadId;
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
+            body: JSON.stringify(body)
         });
-    } catch(e) { /* silent */ }
+    } catch(e) { console.error("Telegram Error:", e.message); }
+}
+
+// Escalate user to Telegram by creating a Forum Topic
+async function escalateToTelegram(token, agentChatId, sessionId, reasonMessage) {
+    let threadId = null;
+    try {
+        // Try to create a topic (only works if agentChatId is a Supergroup with Topics enabled)
+        const resp = await fetch(`https://api.telegram.org/bot${token}/createForumTopic`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: agentChatId, name: `User ${sessionId.substring(0, 6)}` })
+        });
+        const data = await resp.json();
+        if (data.ok && data.result) {
+            threadId = data.result.message_thread_id;
+            db.run("UPDATE chat_sessions SET telegram_thread_id = ? WHERE session_id = ?", [threadId, sessionId]);
+        }
+    } catch (e) { console.error("Topic creation failed:", e.message); }
+
+    await sendToTelegram(token, agentChatId, reasonMessage, threadId);
+    return threadId;
 }
 
 // Push a message to a browser SSE client
@@ -573,6 +596,23 @@ async function pollTelegram() {
                 const msg = update.message;
                 if (!msg) continue;
                 if (String(msg.chat.id) !== agentChatId) continue;
+                
+                const threadId = msg.message_thread_id || null;
+                
+                // Helper to route message
+                const routeAdminReply = (payload) => {
+                    let query = "SELECT session_id FROM chat_sessions WHERE status='agent' ORDER BY created_at DESC LIMIT 1";
+                    let params = [];
+                    if (threadId) {
+                        query = "SELECT session_id FROM chat_sessions WHERE status='agent' AND telegram_thread_id = ?";
+                        params = [threadId];
+                    }
+                    db.get(query, params, (e, s) => {
+                        if (!s) return;
+                        db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'agent', ?)", [s.session_id, payload]);
+                        pushToClient(s.session_id, { sender: 'agent', message: payload });
+                    });
+                };
 
                 // Handle photo from agent
                 if (msg.photo) {
@@ -587,29 +627,15 @@ async function pollTelegram() {
                             const fname = `tg_${Date.now()}.jpg`;
                             fs.writeFileSync(path.join(__dirname, 'public/uploads', fname), buf);
                             const localUrl = `/uploads/${fname}`;
-                            db.get("SELECT session_id FROM chat_sessions WHERE status='agent' ORDER BY created_at DESC LIMIT 1", (e, s) => {
-                                if (!s) return;
-                                const payload = `[IMAGE:${localUrl}]`;
-                                db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'agent', ?)", [s.session_id, payload]);
-                                pushToClient(s.session_id, { sender: 'agent', message: payload });
-                            });
+                            routeAdminReply(`[IMAGE:${localUrl}]`);
                         }
-                    } catch(pe) { /* silent */ }
+                    } catch(pe) { console.error(pe.message); }
                     continue;
                 }
 
                 // Handle text from agent
                 if (!msg.text || msg.text.startsWith('/')) continue;
-                const agentText = msg.text;
-                db.get(
-                    "SELECT session_id FROM chat_sessions WHERE status = 'agent' ORDER BY created_at DESC LIMIT 1",
-                    (err, session) => {
-                        if (!session) return;
-                        const sid = session.session_id;
-                        db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'agent', ?)", [sid, agentText]);
-                        pushToClient(sid, { sender: 'agent', message: agentText });
-                    }
-                );
+                routeAdminReply(msg.text);
             }
         }
     } catch(e) { /* silent */ }
@@ -693,7 +719,7 @@ app.post('/api/chat/send', async (req, res) => {
 
     db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'user', ?)", [sessionId, message]);
 
-    db.get("SELECT status FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
+    db.get("SELECT status, telegram_thread_id FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
         if (!session) return res.status(404).json({ error: 'Session not found' });
         
         if (session.status === 'agent') {
@@ -702,7 +728,7 @@ app.post('/api/chat/send', async (req, res) => {
             const token = settings['telegram_bot_token'];
             const agentChatId = settings['telegram_agent_chat_id'];
             if (token && agentChatId) {
-                await sendToTelegram(token, agentChatId, `<b>User says:</b>\n${message}`);
+                await sendToTelegram(token, agentChatId, `<b>User says:</b>\n${message}`, session.telegram_thread_id);
             }
             return res.json({ type: 'forwarded' });
         } else {
@@ -718,7 +744,7 @@ app.post('/api/chat/send', async (req, res) => {
                 const token = settings['telegram_bot_token'];
                 const agentChatId = settings['telegram_agent_chat_id'];
                 if (token && agentChatId) {
-                    await sendToTelegram(token, agentChatId, `🚨 <b>Agent Requested!</b>\nA user requested human support.\nUser says: ${message}`);
+                    await escalateToTelegram(token, agentChatId, sessionId, `🚨 <b>Agent Requested!</b>\nA user requested human support.\nUser says: ${message}`);
                 }
                 const reply = "I am transferring you to a human agent. They will reply here shortly.";
                 db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'bot', ?)", [sessionId, reply]);
@@ -757,7 +783,7 @@ app.post('/api/chat/upload', upload.single('image'), async (req, res) => {
     const imageUrl = `/uploads/${req.file.filename}`;
     db.run("INSERT INTO chat_messages (session_id, sender, message) VALUES (?, 'user', ?)", [sessionId, `[IMAGE:${imageUrl}]`]);
     
-    db.get("SELECT status, awaiting_screenshot FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
+    db.get("SELECT status, awaiting_screenshot, telegram_thread_id FROM chat_sessions WHERE session_id = ?", [sessionId], async (err, session) => {
         if (!session) return;
         
         const settings = await getSettings();
@@ -770,7 +796,7 @@ app.post('/api/chat/upload', upload.single('image'), async (req, res) => {
             db.run("UPDATE chat_sessions SET status = 'agent', awaiting_screenshot = 0 WHERE session_id = ?", [sessionId]);
             
             if (token && agentChatId) {
-                await sendToTelegram(token, agentChatId, `🚨 <b>Deposit Issue Escalation!</b>\nA user uploaded a deposit receipt and was automatically transferred to human support.\n<b>Image:</b>\n${host}${imageUrl}`);
+                await escalateToTelegram(token, agentChatId, sessionId, `🚨 <b>Deposit Issue Escalation!</b>\nA user uploaded a deposit receipt and was automatically transferred to human support.\n<b>Image:</b>\n${host}${imageUrl}`);
             }
             
             const reply = "Thank you. I have forwarded your receipt to a human agent. They will review it and reply here shortly.";
@@ -782,7 +808,7 @@ app.post('/api/chat/upload', upload.single('image'), async (req, res) => {
         // Normal Agent Mode image forward
         else if (session.status === 'agent') {
             if (token && agentChatId) {
-                await sendToTelegram(token, agentChatId, `<b>User sent an image:</b>\n${host}${imageUrl}`);
+                await sendToTelegram(token, agentChatId, `<b>User sent an image:</b>\n${host}${imageUrl}`, session.telegram_thread_id);
             }
         }
     });
