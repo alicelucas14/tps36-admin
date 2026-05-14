@@ -462,7 +462,7 @@ db.serialize(() => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
     // Add column if it doesn't exist (for older db files)
-    try { db.run("ALTER TABLE chat_sessions ADD COLUMN telegram_thread_id INTEGER"); } catch(e) {}
+    db.run("ALTER TABLE chat_sessions ADD COLUMN telegram_thread_id INTEGER", (err) => { /* ignore error if column exists */ });
 
     db.run(`CREATE TABLE IF NOT EXISTS chat_messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
