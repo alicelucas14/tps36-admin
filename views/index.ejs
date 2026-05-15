@@ -117,12 +117,12 @@
         <div class="space-y-4">
             <% if (typeof homeAccordions !== 'undefined' && homeAccordions.length > 0) { %>
                 <% homeAccordions.forEach(item => { %>
-                    <details class="group bg-[#4a0018] rounded-lg border border-secondary/30 overflow-hidden cursor-pointer shadow-md">
+                    <details class="group bg-[#4a0018] rounded-lg border border-cta/30 overflow-hidden cursor-pointer shadow-md">
                         <summary class="flex justify-between items-center font-bold p-5 md:p-6 text-white hover:bg-[#660022] transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
                             <%= item.question %>
-                            <span class="transition-transform group-open:rotate-180 text-secondary font-black"><i class="fa-solid fa-chevron-down"></i></span>
+                            <span class="transition-transform group-open:rotate-180 text-cta font-black"><i class="fa-solid fa-chevron-down"></i></span>
                         </summary>
-                        <div class="p-5 md:p-6 pt-0 text-slate-300 border-t border-secondary/10 mt-2 leading-relaxed whitespace-pre-wrap"><%= item.answer %></div>
+                        <div class="p-5 md:p-6 pt-0 text-slate-300 border-t border-cta/10 mt-2 leading-relaxed whitespace-pre-wrap"><%= item.answer %></div>
                     </details>
                 <% }) %>
             <% } else { %>
@@ -132,8 +132,8 @@
 
         <!-- Image side -->
         <div class="flex justify-center relative">
-            <div class="absolute inset-0 bg-[#00f5ff]/20 rounded-full blur-[80px] pointer-events-none"></div>
-            <img src="<%= settings['home_accordion_image'] || '/images/hero.png' %>" alt="Casino Games" class="w-full max-w-sm lg:max-w-md relative z-10 animate-[float_6s_ease-in-out_infinite] drop-shadow-[0_0_20px_rgba(0,245,255,0.4)]">
+            <div class="absolute inset-0 bg-cta/10 rounded-full blur-[80px] pointer-events-none"></div>
+            <img src="<%= settings['home_accordion_image'] || '/images/hero.png' %>" alt="Casino Games" class="w-full max-w-sm lg:max-w-md relative z-10 animate-[float_6s_ease-in-out_infinite] drop-shadow-[0_0_20px_rgba(250,204,21,0.4)]">
         </div>
     </div>
 </section>
