@@ -69,15 +69,30 @@
                 <!-- Categories Dropdown -->
                 <div class="bg-accent/80 backdrop-blur-md rounded-2xl border border-cta/20 p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                     <h3 class="text-xl font-black mb-6 tracking-widest uppercase text-white border-b border-cta/20 pb-4">Categories</h3>
-                    <div class="relative">
-                        <select onchange="window.location.href='/blogs?category=' + encodeURIComponent(this.value)" class="w-full bg-primary border border-cta/30 text-white font-bold tracking-wider rounded-lg p-4 focus:outline-none focus:border-cta focus:ring-1 focus:ring-cta cursor-pointer appearance-none">
-                            <option value="All" <%= currentCategory === 'All' ? 'selected' : '' %>>All Categories</option>
+                    <div class="relative" id="custom-category-select">
+                        <button type="button" onclick="document.getElementById('cat-dropdown').classList.toggle('hidden')" class="w-full bg-primary border border-cta/30 text-white font-bold tracking-wider rounded-lg p-4 focus:outline-none focus:border-cta focus:ring-1 focus:ring-cta cursor-pointer flex justify-between items-center text-left transition-all">
+                            <span><%= currentCategory === 'All' || !currentCategory ? 'All Categories' : currentCategory %></span>
+                            <i class="fa-solid fa-chevron-down text-cta transition-transform" id="cat-icon"></i>
+                        </button>
+                        
+                        <div id="cat-dropdown" class="hidden absolute top-full left-0 w-full mt-2 bg-primary border border-cta/30 rounded-lg shadow-gold z-50 overflow-hidden">
+                            <a href="/blogs?category=All" class="block px-4 py-3 text-white font-bold hover:bg-cta hover:text-[#1a0008] transition-colors <%= currentCategory === 'All' ? 'bg-cta/10 text-cta' : '' %>">All Categories</a>
                             <% categories.forEach(cat => { %>
-                                <option value="<%= cat %>" <%= currentCategory === cat ? 'selected' : '' %>><%= cat %></option>
+                                <a href="/blogs?category=<%= encodeURIComponent(cat) %>" class="block px-4 py-3 text-white font-bold hover:bg-cta hover:text-[#1a0008] transition-colors <%= currentCategory === cat ? 'bg-cta/10 text-cta' : '' %>"><%= cat %></a>
                             <% }) %>
-                        </select>
-                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-cta pointer-events-none"></i>
+                        </div>
                     </div>
+
+                    <script>
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', function(e) {
+                            const select = document.getElementById('custom-category-select');
+                            const dropdown = document.getElementById('cat-dropdown');
+                            if (select && dropdown && !select.contains(e.target)) {
+                                dropdown.classList.add('hidden');
+                            }
+                        });
+                    </script>
                 </div>
                 
                 <!-- Recent Blogs -->
