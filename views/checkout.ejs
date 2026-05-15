@@ -21,14 +21,14 @@
                     <div class="flex-1 w-full">
                         <div class="rounded-2xl border-2 border-secondary/20 overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.1)] transform hover:scale-[1.02] transition-transform duration-500 flex flex-col gap-1 bg-secondary/10">
                             <% if (step.image_url) { %>
-                                <img src="<%= step.image_url %>" alt="<%= step.title %> Part 1" class="w-full h-auto object-cover bg-[#000a14]">
+                                <img src="<%= step.image_url %>" alt="<%= step.title %> Part 1" class="w-full h-auto object-cover bg-[#1a0008]">
                             <% } else { %>
-                                <div class="w-full h-48 bg-[#000a14] flex items-center justify-center text-slate-500">
+                                <div class="w-full h-48 bg-[#1a0008] flex items-center justify-center text-slate-500">
                                     <i class="fa-solid fa-image text-4xl"></i>
                                 </div>
                             <% } %>
                             <% if (step.image_url_2) { %>
-                                <img src="<%= step.image_url_2 %>" alt="<%= step.title %> Part 2" class="w-full h-auto object-cover bg-[#000a14]">
+                                <img src="<%= step.image_url_2 %>" alt="<%= step.title %> Part 2" class="w-full h-auto object-cover bg-[#1a0008]">
                             <% } %>
                         </div>
                     </div>

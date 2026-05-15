@@ -1,7 +1,7 @@
 <%- include('includes/header') %>
 
 <!-- HERO SECTION: Vegas Casino Style -->
-<section class="relative px-4 py-8 lg:pt-12 lg:pb-16 overflow-hidden bg-[#000a14] min-h-0">
+<section class="relative px-4 py-8 lg:pt-12 lg:pb-16 overflow-hidden bg-[#1a0008] min-h-0">
     <!-- Deep Navy & Neon Background Elements -->
     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[300px] bg-[#00f5ff]/10 blur-[150px] pointer-events-none"></div>
@@ -118,8 +118,8 @@
         <div class="space-y-4">
             <% if (typeof homeAccordions !== 'undefined' && homeAccordions.length > 0) { %>
                 <% homeAccordions.forEach(item => { %>
-                    <details class="group bg-[#001c3d] rounded-lg border border-secondary/30 overflow-hidden cursor-pointer shadow-md">
-                        <summary class="flex justify-between items-center font-bold p-5 md:p-6 text-white hover:bg-[#002855] transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
+                    <details class="group bg-[#4a0018] rounded-lg border border-secondary/30 overflow-hidden cursor-pointer shadow-md">
+                        <summary class="flex justify-between items-center font-bold p-5 md:p-6 text-white hover:bg-[#660022] transition-colors list-none select-none [&::-webkit-details-marker]:hidden">
                             <%= item.question %>
                             <span class="transition-transform group-open:rotate-180 text-secondary font-black"><i class="fa-solid fa-chevron-down"></i></span>
                         </summary>
@@ -140,7 +140,7 @@
 </section>
 
 <!-- How to Install Section -->
-<section class="py-24 bg-[#000a14] relative overflow-hidden">
+<section class="py-24 bg-[#1a0008] relative overflow-hidden">
     <!-- Ambient glows -->
     <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[150px] pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
     <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none translate-x-1/2 translate-y-1/2"></div>
@@ -164,7 +164,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 rounded-3xl overflow-hidden border border-secondary/20 shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_0_1px_rgba(0,245,255,0.05)]">
 
             <!-- LEFT: Steps panel (2/5) -->
-            <div class="lg:col-span-2 bg-gradient-to-b from-[#00111f] to-[#000d18] flex flex-col relative">
+            <div class="lg:col-span-2 bg-gradient-to-b from-[#2e000f] to-[#24000c] flex flex-col relative">
                 <!-- Top accent line -->
                 <div class="h-[3px] w-full bg-gradient-to-r from-secondary/0 via-secondary to-secondary/0"></div>
 
@@ -210,7 +210,7 @@
             </div>
 
             <!-- RIGHT: Video panel (3/5) -->
-            <div class="lg:col-span-3 bg-[#000810] relative flex flex-col overflow-hidden">
+            <div class="lg:col-span-3 bg-[#140006] relative flex flex-col overflow-hidden">
                 <!-- Corner accents -->
                 <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-secondary/30 rounded-tl-lg pointer-events-none z-10"></div>
                 <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-secondary/30 rounded-br-lg pointer-events-none z-10"></div>
@@ -361,7 +361,7 @@
 </section>
 
 <!-- About Us Section -->
-<section id="about-us" class="relative bg-[#000a14] py-24 border-y border-secondary/10">
+<section id="about-us" class="relative bg-[#1a0008] py-24 border-y border-secondary/10">
     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-striped-brick.png')] opacity-5"></div>
     <div class="max-w-5xl mx-auto px-4 relative z-10">
         <div class="text-center mb-12">
@@ -428,7 +428,7 @@
 
 <!-- Recent Reviews -->
 <% if(recentReviews && recentReviews.length > 0) { %>
-<section class="bg-[#000a14] py-24 border-t border-secondary/10">
+<section class="bg-[#1a0008] py-24 border-t border-secondary/10">
     <div class="max-w-7xl mx-auto px-4">
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-wider uppercase text-white">VIP Player Reviews</h2>
