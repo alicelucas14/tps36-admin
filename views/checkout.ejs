@@ -19,7 +19,7 @@
                         <div class="text-xl md:text-2xl leading-relaxed text-slate-300 whitespace-pre-wrap"><%= step.description %></div>
                     </div>
                     <div class="flex-1 w-full">
-                        <div class="rounded-2xl border-2 border-secondary/20 overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.1)] transform hover:scale-[1.02] transition-transform duration-500 flex flex-col gap-1 bg-secondary/10">
+                        <div class="rounded-2xl border-2 border-cta/20 overflow-hidden shadow-[0_0_30px_rgba(250,204,21,0.1)] transform hover:scale-[1.02] transition-transform duration-500 flex flex-col gap-1 bg-cta/10">
                             <% if (step.image_url) { %>
                                 <img src="<%= step.image_url %>" alt="<%= step.title %> Part 1" class="w-full h-auto object-cover bg-[#1a0008]">
                             <% } else { %>
@@ -42,12 +42,12 @@
     </div>
 
     <!-- Back / Contact Section -->
-    <div class="mt-24 flex flex-col sm:flex-row gap-6 items-center justify-center pt-12 border-t border-secondary/20">
-        <a href="/" class="flex items-center gap-2 text-slate-400 hover:text-secondary transition-colors text-base font-semibold uppercase tracking-wider">
+    <div class="mt-24 flex flex-col sm:flex-row gap-6 items-center justify-center pt-12 border-t border-cta/20">
+        <a href="/" class="flex items-center gap-2 text-slate-400 hover:text-cta transition-colors text-base font-semibold uppercase tracking-wider">
             <i class="fa-solid fa-arrow-left"></i> Back to Home
         </a>
         <span class="text-slate-600 hidden sm:block">|</span>
-        <a href="/contact" class="flex items-center gap-2 text-slate-400 hover:text-secondary transition-colors text-base font-semibold uppercase tracking-wider">
+        <a href="/contact" class="flex items-center gap-2 text-slate-400 hover:text-cta transition-colors text-base font-semibold uppercase tracking-wider">
             <i class="fa-solid fa-headset"></i> Contact Support
         </a>
     </div>
