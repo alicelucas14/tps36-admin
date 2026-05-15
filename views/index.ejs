@@ -149,7 +149,7 @@
 
         <!-- Section Label + Title -->
         <div class="text-center mb-14">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-xs font-bold tracking-[0.15em] uppercase mb-5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cta/30 bg-cta/10 text-cta text-xs font-bold tracking-[0.15em] uppercase mb-5">
                 <i class="fa-solid fa-mobile-screen-button text-[10px]"></i> Installation Guide
             </div>
             <h2 class="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
@@ -160,26 +160,26 @@
         </div>
 
         <!-- Main Card -->
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 rounded-3xl overflow-hidden border border-secondary/20 shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_0_1px_rgba(0,245,255,0.05)]">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 rounded-3xl overflow-hidden border border-cta/20 shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_0_1px_rgba(250,204,21,0.05)]">
 
             <!-- LEFT: Steps panel (2/5) -->
             <div class="lg:col-span-2 bg-gradient-to-b from-[#2e000f] to-[#24000c] flex flex-col relative">
                 <!-- Top accent line -->
-                <div class="h-[3px] w-full bg-gradient-to-r from-secondary/0 via-secondary to-secondary/0"></div>
+                <div class="h-[3px] w-full bg-gradient-to-r from-cta/0 via-cta to-cta/0"></div>
 
                 <div class="p-8 flex flex-col flex-1">
                     <!-- Mini header -->
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-10 h-10 rounded-xl bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary">
+                        <div class="w-10 h-10 rounded-xl bg-cta/15 border border-cta/30 flex items-center justify-center text-cta">
                             <i class="fa-solid fa-circle-play text-lg"></i>
                         </div>
                         <div>
                             <div class="text-white font-black text-sm tracking-wide">Watch Video</div>
-                            <div class="text-secondary/60 text-xs">Click play to get started</div>
+                            <div class="text-cta/60 text-xs">Click play to get started</div>
                         </div>
                     </div>
 
-                    <p class="text-slate-400 text-sm leading-relaxed mb-8 border-l-2 border-secondary/30 pl-4">
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8 border-l-2 border-cta/30 pl-4">
                         Play Teen Patti, Rummy & Lucky Lottery — all in one app. Download now and keep winning every day!
                     </p>
 
@@ -193,10 +193,10 @@
                         ].forEach(function(s) { %>
                         <div class="flex items-start gap-4 group">
                             <div class="flex flex-col items-center gap-1 flex-shrink-0">
-                                <div class="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/25 flex items-center justify-center text-secondary group-hover:bg-secondary/20 group-hover:border-secondary/50 transition-all">
+                                <div class="w-10 h-10 rounded-xl bg-cta/10 border border-cta/25 flex items-center justify-center text-cta group-hover:bg-cta/20 group-hover:border-cta/50 transition-all">
                                     <i class="fa-solid <%= s.icon %> text-sm"></i>
                                 </div>
-                                <div class="text-secondary/30 text-[9px] font-black tracking-widest"><%= s.step %></div>
+                                <div class="text-cta/30 text-[9px] font-black tracking-widest"><%= s.step %></div>
                             </div>
                             <div class="pt-1">
                                 <div class="text-white font-bold text-sm"><%= s.title %></div>
@@ -211,8 +211,8 @@
             <!-- RIGHT: Video panel (3/5) -->
             <div class="lg:col-span-3 bg-[#140006] relative flex flex-col overflow-hidden">
                 <!-- Corner accents -->
-                <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-secondary/30 rounded-tl-lg pointer-events-none z-10"></div>
-                <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-secondary/30 rounded-br-lg pointer-events-none z-10"></div>
+                <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-cta/30 rounded-tl-lg pointer-events-none z-10"></div>
+                <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-cta/30 rounded-br-lg pointer-events-none z-10"></div>
 
                 <!-- Video wrapper -->
                 <div class="lazy-video-wrapper-tps w-full relative flex-1">
@@ -226,7 +226,7 @@
 
                     <!-- Fallback when no thumbnail -->
                     <div id="video-no-thumb" style="display:none; position:absolute; inset:0; background:linear-gradient(135deg,#000d1a,#001a2e); align-items:center; justify-content:center; flex-direction:column; gap:12px;">
-                        <i class="fa-solid fa-clapperboard" style="font-size:3rem; color:rgba(0,245,255,0.3);"></i>
+                        <i class="fa-solid fa-clapperboard" style="font-size:3rem; color:rgba(250,204,21,0.3);"></i>
                         <span style="color:rgba(255,255,255,0.3); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">Click play to watch</span>
                     </div>
 
@@ -238,7 +238,7 @@
 
                     <!-- Bottom caption overlay -->
                     <div class="lazy-video-caption">
-                        <i class="fa-solid fa-film text-secondary mr-2 text-xs"></i>
+                        <i class="fa-solid fa-film text-cta mr-2 text-xs"></i>
                         <span>Installation Walkthrough — 2 min</span>
                     </div>
                 </div>
@@ -279,9 +279,9 @@
                         left: 50%;
                         transform: translate(-50%, -50%);
                         z-index: 3;
-                        background: rgba(0, 245, 255, 0.12);
+                        background: rgba(250, 204, 21, 0.12);
                         color: #fff;
-                        border: 2px solid rgba(0, 245, 255, 0.7);
+                        border: 2px solid rgba(250, 204, 21, 0.7);
                         border-radius: 50%;
                         width: 80px;
                         height: 80px;
@@ -289,7 +289,7 @@
                         cursor: pointer;
                         transition: all 0.25s ease;
                         backdrop-filter: blur(8px);
-                        box-shadow: 0 0 0 0 rgba(0,245,255,0.4), 0 0 40px rgba(0,245,255,0.2);
+                        box-shadow: 0 0 0 0 rgba(250,204,21,0.4), 0 0 40px rgba(250,204,21,0.2);
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -298,7 +298,7 @@
                         position: absolute;
                         inset: -6px;
                         border-radius: 50%;
-                        border: 2px solid rgba(0,245,255,0.3);
+                        border: 2px solid rgba(250,204,21,0.3);
                         animation: pulse-ring 2s ease-out infinite;
                     }
                     @keyframes pulse-ring {
@@ -306,9 +306,9 @@
                         100% { transform: scale(1.5); opacity: 0; }
                     }
                     .lazy-video-play-button-tps:hover {
-                        background: rgba(0, 245, 255, 0.25);
+                        background: rgba(250, 204, 21, 0.25);
                         transform: scale(1.1);
-                        box-shadow: 0 0 60px rgba(0, 245, 255, 0.5);
+                        box-shadow: 0 0 60px rgba(250, 204, 21, 0.5);
                     }
                     .lazy-video-play-button-tps:focus { outline: none; }
                     .lazy-video-tps {
