@@ -102,55 +102,55 @@
                 
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center gap-8 text-sm font-bold text-gray-300 uppercase tracking-widest">
-                    <a href="/" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">Home</a>
+                    <a href="/" class="hover:text-cta hover:drop-shadow-[0_0_5px_rgba(250,204,21,0.8)] transition-all">Home</a>
                     
                     <!-- Pages Dropdown -->
                     <div class="relative group">
-                        <button class="flex items-center gap-1 hover:text-secondary transition-all">
+                        <button class="flex items-center gap-1 hover:text-cta transition-all">
                             Pages <i class="fa-solid fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180"></i>
                         </button>
                         <div class="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div class="bg-accent/95 backdrop-blur-xl border border-secondary/30 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.8)] p-2 min-w-[200px]">
-                                <a href="/blogs" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary/10 hover:text-secondary transition-colors">
-                                    <i class="fa-solid fa-pen-nib text-secondary w-4"></i> Blogs
+                            <div class="bg-accent/95 backdrop-blur-xl border border-cta/30 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.8)] p-2 min-w-[200px]">
+                                <a href="/blogs" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cta/10 hover:text-cta transition-colors">
+                                    <i class="fa-solid fa-pen-nib text-cta w-4"></i> Blogs
                                 </a>
-                                <a href="/reviews" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary/10 hover:text-secondary transition-colors">
-                                    <i class="fa-solid fa-star text-secondary w-4"></i> Reviews
+                                <a href="/reviews" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cta/10 hover:text-cta transition-colors">
+                                    <i class="fa-solid fa-star text-cta w-4"></i> Reviews
                                 </a>
-                                <a href="/faq" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary/10 hover:text-secondary transition-colors">
-                                    <i class="fa-solid fa-circle-question text-secondary w-4"></i> FAQ
+                                <a href="/faq" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cta/10 hover:text-cta transition-colors">
+                                    <i class="fa-solid fa-circle-question text-cta w-4"></i> FAQ
                                 </a>
                             </div>
                         </div>
                     </div>
                     
-                    <a href="/#about-us" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">About</a>
-                    <a href="/contact" class="hover:text-secondary hover:drop-shadow-[0_0_5px_rgba(0,245,255,0.8)] transition-all">Contact</a>
+                    <a href="/#about-us" class="hover:text-cta hover:drop-shadow-[0_0_5px_rgba(250,204,21,0.8)] transition-all">About</a>
+                    <a href="/contact" class="hover:text-cta hover:drop-shadow-[0_0_5px_rgba(250,204,21,0.8)] transition-all">Contact</a>
                     <a href="<%= settings['apk_file_url'] || '#' %>" class="bg-cta text-[#1a0008] px-8 py-3 rounded-full font-black hover:bg-yellow-400 hover:text-[#1a0008] transition-all transform hover:scale-105 ml-4 shadow-gold tracking-wider">PLAY NOW</a>
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-secondary focus:outline-none text-3xl">
+                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-cta focus:outline-none text-3xl">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
         
         <!-- Mobile Nav Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-secondary/20 px-4 py-6 space-y-6">
-            <a href="/" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors text-center">Home</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-cta/20 px-4 py-6 space-y-6">
+            <a href="/" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-cta transition-colors text-center">Home</a>
             <div>
-                <button onclick="document.getElementById('mobile-pages').classList.toggle('hidden')" class="flex justify-center w-full text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors">
+                <button onclick="document.getElementById('mobile-pages').classList.toggle('hidden')" class="flex justify-center w-full text-gray-300 font-bold uppercase tracking-widest hover:text-cta transition-colors">
                     Pages <i class="fa-solid fa-chevron-down text-[10px] ml-2 mt-1"></i>
                 </button>
                 <div id="mobile-pages" class="hidden mt-4 space-y-4 text-center">
-                    <a href="/blogs" class="block text-gray-400 hover:text-secondary transition-colors">Blogs</a>
-                    <a href="/reviews" class="block text-gray-400 hover:text-secondary transition-colors">Reviews</a>
-                    <a href="/faq" class="block text-gray-400 hover:text-secondary transition-colors">FAQ</a>
+                    <a href="/blogs" class="block text-gray-400 hover:text-cta transition-colors">Blogs</a>
+                    <a href="/reviews" class="block text-gray-400 hover:text-cta transition-colors">Reviews</a>
+                    <a href="/faq" class="block text-gray-400 hover:text-cta transition-colors">FAQ</a>
                 </div>
             </div>
-            <a href="/#about-us" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors text-center">About</a>
-            <a href="/contact" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-secondary transition-colors text-center">Contact</a>
+            <a href="/#about-us" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-cta transition-colors text-center">About</a>
+            <a href="/contact" class="block text-gray-300 font-bold uppercase tracking-widest hover:text-cta transition-colors text-center">Contact</a>
             <div class="pt-6">
                 <a href="<%= settings['apk_file_url'] || '#' %>" class="block w-full text-center bg-cta text-[#1a0008] font-black py-4 rounded-xl shadow-gold tracking-widest text-lg">PLAY NOW</a>
             </div>
