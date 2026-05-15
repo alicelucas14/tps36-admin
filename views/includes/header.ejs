@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + settings['site_name'] : (settings['seo_home_title'] || settings['site_name'] + ' - Premium Gaming') %></title>
-    <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (settings['seo_home_description'] || 'Play skill-based games on ' + settings['site_name'] + ' with secure payments, instant withdrawals, and VIP support.') %>">
-    <meta name="keywords" content="<%= settings['seo_default_keywords'] || settings['site_name'] + ', Teen Patti, Rummy, online gaming' %>">
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle + (settings['site_name'] ? ' | ' + settings['site_name'] : '') : (settings['seo_home_title'] || (settings['site_name'] || 'Teen Patti Stars') + ' - Premium Gaming') %></title>
+    <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (settings['seo_home_description'] || 'Play skill-based games on ' + (settings['site_name'] || 'Teen Patti Stars') + ' with secure payments, instant withdrawals, and VIP support.') %>">
+    <meta name="keywords" content="<%= settings['seo_default_keywords'] || (settings['site_name'] || 'Teen Patti Stars') + ', Teen Patti, Rummy, online gaming' %>">
     <meta name="robots" content="<%= settings['seo_robots'] || 'index, follow' %>">
     <% if (settings['seo_base_url']) { %><link rel="canonical" href="<%= settings['seo_base_url'] %>"><% } %>
     <% if (settings['seo_google_verification']) { %><meta name="google-site-verification" content="<%= settings['seo_google_verification'] %>"><% } %>
 
     <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + settings['site_name'] : (settings['seo_home_title'] || settings['site_name']) %>">
-    <meta property="og:description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (settings['seo_home_description'] || 'Join VIP players on ' + settings['site_name'] + '. Download the app for exclusive bonuses!') %>">
+    <meta property="og:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle + (settings['site_name'] ? ' | ' + settings['site_name'] : '') : (settings['seo_home_title'] || settings['site_name'] || 'Teen Patti Stars') %>">
+    <meta property="og:description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (settings['seo_home_description'] || 'Join VIP players on ' + (settings['site_name'] || 'Teen Patti Stars') + '. Download the app for exclusive bonuses!') %>">
     <meta property="og:type" content="website">
     <meta property="og:image" content="<%= settings['seo_og_image'] || '/images/Teen-Patti-Stars-Logo.webp' %>">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' + settings['site_name'] : settings['site_name'] %>">
+    <meta name="twitter:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle + (settings['site_name'] ? ' | ' + settings['site_name'] : '') : (settings['site_name'] || 'Teen Patti Stars') %>">
     <meta name="twitter:image" content="<%= settings['seo_og_image'] || '/images/Teen-Patti-Stars-Logo.webp' %>">
     <link rel="icon" type="image/webp" href="/images/Teen-Patti-Stars-Logo.webp">
     
