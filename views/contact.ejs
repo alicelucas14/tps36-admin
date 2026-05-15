@@ -18,7 +18,7 @@
                     <div
                         class="bg-[#5c031c] rounded-2xl p-8 relative overflow-hidden shadow-lg border border-red-800/50 flex flex-col h-[280px]">
                         <div class="mb-auto z-10 relative">
-                            <p class="text-secondary text-sm font-bold tracking-wider uppercase mb-2">
+                            <p class="text-cta text-sm font-bold tracking-wider uppercase mb-2">
                                 <%= card.subtitle || '' %>
                             </p>
                             <h3 class="text-3xl font-black text-white mb-4 uppercase">
@@ -48,14 +48,14 @@
                                             <% if (card.title && card.title.toLowerCase().includes('chat')) { %>
                                                 <div class="relative">
                                                     <i
-                                                        class="fa-solid fa-comments text-7xl text-secondary drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform rotate-[-10deg]"></i>
+                                                        class="fa-solid fa-comments text-7xl text-cta drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform rotate-[-10deg]"></i>
                                                     <i
                                                         class="fa-solid fa-comment-dots text-5xl text-white absolute -top-4 -right-4 drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)] transform rotate-[10deg]"></i>
                                                 </div>
                                                 <% } else if (card.title && card.title.toLowerCase().includes('mail')) {
                                                     %>
                                                     <div
-                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-secondary/40 to-blue-600/10 border-4 border-secondary/50 flex items-center justify-center backdrop-blur-sm shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-cta/40 to-blue-600/10 border-4 border-cta/50 flex items-center justify-center backdrop-blur-sm shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
                                                         <i
                                                             class="fa-solid fa-at text-5xl text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.5)]"></i>
                                                     </div>
@@ -63,18 +63,18 @@
                                                         card.title.toLowerCase().includes('call')) { %>
                                                         <div class="relative">
                                                             <i
-                                                                class="fa-solid fa-phone-volume text-7xl text-secondary drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform rotate-[-20deg]"></i>
+                                                                class="fa-solid fa-phone-volume text-7xl text-cta drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform rotate-[-20deg]"></i>
                                                             <div
-                                                                class="absolute -top-8 -right-4 w-12 h-12 bg-white rounded-full border-2 border-secondary flex items-center justify-center shadow-[0_5px_10px_rgba(0,0,0,0.3)]">
+                                                                class="absolute -top-8 -right-4 w-12 h-12 bg-white rounded-full border-2 border-cta flex items-center justify-center shadow-[0_5px_10px_rgba(0,0,0,0.3)]">
                                                                 <i
                                                                     class="fa-solid fa-user-headset text-primary text-xl"></i>
                                                             </div>
                                                         </div>
                                                         <% } else { %>
                                                             <div
-                                                                class="w-24 h-24 rounded-full bg-secondary/10 flex items-center justify-center">
+                                                                class="w-24 h-24 rounded-full bg-cta/10 flex items-center justify-center">
                                                                 <i
-                                                                    class="fa-solid fa-envelope-open-text text-5xl text-secondary opacity-50"></i>
+                                                                    class="fa-solid fa-envelope-open-text text-5xl text-cta opacity-50"></i>
                                                             </div>
                                                             <% } %>
                                         </div>
@@ -104,7 +104,7 @@
             <!-- Left Side Image -->
             <div class="lg:col-span-5 relative mt-8 lg:mt-24">
                 <img src="<%= settings['contact_faq_image'] || '/images/casino_phone_burst.png' %>" alt="FAQ Graphic"
-                    class="w-full h-auto drop-shadow-[0_0_30px_rgba(0,245,255,0.2)] animate-float transform scale-110 lg:scale-125">
+                    class="w-full h-auto drop-shadow-[0_0_30px_rgba(250,204,21,0.2)] animate-float transform scale-110 lg:scale-125">
             </div>
 
             <!-- Right Side Accordion -->
