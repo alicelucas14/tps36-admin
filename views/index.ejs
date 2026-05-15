@@ -34,9 +34,11 @@
         </div>
         
         <div class="relative z-10 flex justify-center lg:self-center">
-            <!-- Casino Glowing Orb behind image -->
-            <div class="absolute inset-0 bg-[#00f5ff]/20 rounded-full blur-[80px] animate-pulse"></div>
-            <img src="<%= settings['hero_image'] || '/images/hero.png' %>" alt="Hero Image" class="w-full max-w-md lg:max-w-[90%] relative z-10 drop-shadow-[0_0_30px_rgba(0,245,255,0.2)] animate-[float_6s_ease-in-out_infinite]">
+            <!-- Intense Casino Glowing Orb behind image -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#00f5ff]/40 rounded-full blur-[70px] animate-pulse"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-[#00f5ff]/60 rounded-full blur-[40px]"></div>
+            
+            <img src="<%= settings['hero_image'] || '/images/hero.png' %>" alt="Hero Image" class="w-full max-w-md lg:max-w-[90%] relative z-10 drop-shadow-[0_0_40px_rgba(0,245,255,0.5)] animate-[float_6s_ease-in-out_infinite]">
         </div>
     </div>
     
