@@ -2,9 +2,9 @@
 
 <div class="py-12 md:py-20 px-4 min-h-screen relative">
     <!-- Background Glow Elements -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-secondary/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-cta/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-    <div class="max-w-7xl mx-auto bg-accent/80 backdrop-blur-md border border-secondary/20 rounded-[2rem] p-8 md:p-12 lg:p-16 shadow-[0_0_40px_rgba(0,0,0,0.6)] relative z-10">
+    <div class="max-w-7xl mx-auto bg-accent/80 backdrop-blur-md border border-cta/20 rounded-[2rem] p-8 md:p-12 lg:p-16 shadow-[0_0_40px_rgba(0,0,0,0.6)] relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             
             <!-- Left Column -->
@@ -34,19 +34,19 @@
                 <% } %>
                 
                 <!-- Divider -->
-                <hr class="border-secondary/20 mb-10">
+                <hr class="border-cta/20 mb-10">
                 
                 <!-- Related Posts (Cards) -->
                 <h3 class="text-xl md:text-2xl font-serif text-white font-bold mb-8">Related Posts</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <% recentBlogs.slice(0, 2).forEach(rb => { %>
-                        <a href="/<%= rb.slug %>" class="group block border border-secondary/20 rounded-3xl overflow-hidden hover:border-[#facc15] hover:shadow-[0_0_20px_rgba(250,204,21,0.2)] hover:-translate-y-1 transition-all duration-300 bg-primary/40">
+                        <a href="/<%= rb.slug %>" class="group block border border-cta/20 rounded-3xl overflow-hidden hover:border-[#facc15] hover:shadow-[0_0_20px_rgba(250,204,21,0.2)] hover:-translate-y-1 transition-all duration-300 bg-primary/40">
                             <div class="h-48 w-full bg-primary overflow-hidden flex items-center justify-center relative">
                                 <% if(rb.image_url) { %>
                                     <div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors z-10"></div>
                                     <img src="<%= rb.image_url %>" alt="<%= rb.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 z-0">
                                 <% } else { %>
-                                    <i class="fa-solid fa-image text-5xl text-secondary/20"></i>
+                                    <i class="fa-solid fa-image text-5xl text-cta/20"></i>
                                 <% } %>
                             </div>
                             <div class="p-8 bg-transparent">
@@ -62,18 +62,18 @@
             <div class="lg:col-span-4">
                 <div class="sticky top-24">
                     <!-- Main Image -->
-                    <div class="bg-primary/50 border border-secondary/20 rounded-3xl p-4 shadow-lg mb-12">
+                    <div class="bg-primary/50 border border-cta/20 rounded-3xl p-4 shadow-lg mb-12">
                         <% if(blog.image_url) { %>
                             <img src="<%= blog.image_url %>" alt="<%= blog.title %>" class="w-full aspect-square object-cover rounded-2xl">
                         <% } else { %>
                             <div class="w-full aspect-square bg-primary rounded-2xl flex items-center justify-center">
-                                <i class="fa-solid fa-image text-6xl text-secondary/20"></i>
+                                <i class="fa-solid fa-image text-6xl text-cta/20"></i>
                             </div>
                         <% } %>
                     </div>
                     
                     <!-- Meta Data -->
-                    <div class="grid grid-cols-3 gap-y-6 text-sm mb-12 border border-secondary/20 p-6 rounded-2xl bg-primary/40">
+                    <div class="grid grid-cols-3 gap-y-6 text-sm mb-12 border border-cta/20 p-6 rounded-2xl bg-primary/40">
                         <div class="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Author</div>
                         <div class="col-span-2 text-white font-bold">Product Team</div>
                         
@@ -88,7 +88,7 @@
                     <h3 class="text-xl md:text-2xl font-serif text-white font-bold mb-6">Recent Posts</h3>
                     <div class="space-y-4">
                         <% recentBlogs.forEach(rb => { %>
-                            <a href="/<%= rb.slug %>" class="block bg-primary/40 border border-secondary/20 p-5 rounded-2xl hover:border-[#facc15] hover:shadow-[0_0_15px_rgba(250,204,21,0.15)] transition-all group">
+                            <a href="/<%= rb.slug %>" class="block bg-primary/40 border border-cta/20 p-5 rounded-2xl hover:border-[#facc15] hover:shadow-[0_0_15px_rgba(250,204,21,0.15)] transition-all group">
                                 <h4 class="text-slate-300 font-bold text-sm leading-snug group-hover:text-[#facc15] transition-colors line-clamp-2"><%= rb.title %></h4>
                             </a>
                         <% }) %>
