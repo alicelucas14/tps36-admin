@@ -148,7 +148,7 @@ app.get('/sitemap.xml', async (req, res) => {
 
     db.all("SELECT slug, created_at FROM blogs ORDER BY created_at DESC", (err, blogs) => {
         const blogUrls = (blogs || []).map(b => ({
-            url: `/blogs/${b.slug}`,
+            url: `/${b.slug}`,
             priority: '0.7',
             freq: 'monthly',
             date: b.created_at ? b.created_at.split(' ')[0] : now
@@ -1157,39 +1157,6 @@ app.get('/terms-and-conditions', async (req, res) => {
     });
 });
 
-app.get('/sitemap.xml', (req, res) => {
-    const baseUrl = 'https://stars777.com';
-    db.all("SELECT slug, created_at FROM blogs WHERE status = 'Published' ORDER BY created_at DESC", (err, blogs) => {
-        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-        
-        // Add static routes
-        const routes = [
-            { path: '/', priority: '1.0', changefreq: 'daily' },
-            { path: '/blogs', priority: '0.8', changefreq: 'daily' },
-            { path: '/reviews', priority: '0.8', changefreq: 'weekly' },
-            { path: '/faq', priority: '0.7', changefreq: 'monthly' },
-            { path: '/contact', priority: '0.9', changefreq: 'yearly' }
-        ];
-        
-        routes.forEach(route => {
-            xml += `  <url>\n    <loc>${baseUrl}${route.path}</loc>\n    <changefreq>${route.changefreq}</changefreq>\n    <priority>${route.priority}</priority>\n  </url>\n`;
-        });
-        
-        // Add dynamic blog posts
-        if (blogs) {
-            blogs.forEach(blog => {
-                const date = new Date(blog.created_at).toISOString().split('T')[0];
-                xml += `  <url>\n    <loc>${baseUrl}/${blog.slug}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
-            });
-        }
-        
-        xml += '</urlset>';
-        
-        res.header('Content-Type', 'application/xml');
-        res.send(xml);
-    });
-});
 
 
 // ================= ADMIN ROUTES =================
