@@ -30,7 +30,7 @@
                         </div>
                         <% if(card.button_text) { %>
                             <a href="<%= card.button_link || '#' %>"
-                                class="bg-cta text-[#1a0008] font-bold text-sm px-6 py-3 rounded uppercase mt-6 z-10 self-start hover:bg-yellow-400 hover:text-[#1a0008] transition-colors shadow-gold inline-block">
+                                class="bg-transparent border border-secondary text-secondary font-bold text-sm px-6 py-3 rounded uppercase mt-6 z-10 self-start hover:bg-secondary hover:text-primary transition-colors inline-block">
                                 <%= card.button_text %>
                             </a>
                             <% } %>

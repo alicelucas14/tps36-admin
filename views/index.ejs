@@ -18,7 +18,7 @@
                 <%- settings['hero_subtitle'] || 'Experience the ultimate thrill. Play real cash <strong class="text-white">Teen Patti</strong> and <strong class="text-white">Rummy</strong> with VIP tables, instant withdrawals, and elite 24/7 support.' %>
             </p>
             <div class="flex justify-center lg:justify-start pt-2 gap-4 flex-col sm:flex-row">
-                <a href="<%= settings['apk_file_url'] || '#' %>" class="group relative px-6 py-3 bg-cta text-[#1a0008] font-black text-base tracking-widest uppercase rounded-lg overflow-hidden shadow-gold transform hover:-translate-y-1 transition-all">
+                <a href="<%= settings['apk_file_url'] || '#' %>" class="group relative px-6 py-3 bg-transparent border-2 border-secondary text-secondary font-black text-base tracking-widest uppercase rounded-lg hover:bg-secondary hover:text-primary transition-all">
                     <div class="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
                     <span class="relative flex items-center justify-center gap-2">
                         <i class="fa-solid fa-download"></i> <%= settings['hero_button1_text'] || 'DOWNLOAD APP' %>
@@ -34,9 +34,7 @@
         </div>
         
         <div class="relative z-10 flex justify-center lg:self-center">
-            <!-- Soft Cyan Aura matching the reference image -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] max-w-[500px] max-h-[500px] bg-[#00f5ff]/20 rounded-full blur-[100px] z-0 pointer-events-none"></div>
-            
+            <!-- No aura behind hero image to match reference -->
             <img src="<%= settings['hero_image'] || '/images/hero.png' %>" alt="Hero Image" class="w-full max-w-md lg:max-w-[90%] relative z-10 drop-shadow-[0_0_25px_rgba(0,245,255,0.3)] animate-[float_6s_ease-in-out_infinite]">
         </div>
     </div>
@@ -246,7 +244,7 @@
                 </div>
 
                 <!-- Download CTA below video -->
-                <a href="<%= settings['apk_file_url'] || '#' %>" class="flex items-center justify-center gap-3 py-4 px-6 bg-cta hover:bg-yellow-400 text-[#1a0008] font-black text-sm tracking-widest uppercase transition-all shadow-gold hover:shadow-[0_0_30px_rgba(250,204,21,0.6)] relative z-10">
+                <a href="<%= settings['apk_file_url'] || '#' %>" class="flex items-center justify-center gap-3 py-4 px-6 bg-transparent border-2 border-secondary hover:bg-secondary text-secondary hover:text-primary font-black text-sm tracking-widest uppercase transition-all relative z-10">
                     <i class="fa-solid fa-download text-base"></i> Download Now — Free
                 </a>
 
