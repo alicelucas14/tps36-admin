@@ -4,7 +4,7 @@
 <section class="relative px-4 py-8 lg:pt-12 lg:pb-16 overflow-hidden bg-[#1a0008] min-h-0">
     <!-- Deep Navy & Neon Background Elements -->
     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[300px] bg-[#00f5ff]/10 blur-[150px] pointer-events-none"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[200px] bg-[#00f5ff]/5 blur-[120px] pointer-events-none z-0"></div>
     
     <div class="relative mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         <div class="space-y-6 text-center lg:text-left z-10 pt-2">
@@ -34,11 +34,10 @@
         </div>
         
         <div class="relative z-10 flex justify-center lg:self-center">
-            <!-- Intense Casino Glowing Orb behind image -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-[#00f5ff]/40 rounded-full blur-[80px] animate-pulse z-0 pointer-events-none"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-[#00f5ff]/60 rounded-full blur-[50px] z-0 pointer-events-none"></div>
+            <!-- Soft Cyan Aura matching the reference image -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] max-w-[500px] max-h-[500px] bg-[#00f5ff]/20 rounded-full blur-[100px] z-0 pointer-events-none"></div>
             
-            <img src="<%= settings['hero_image'] || '/images/hero.png' %>" alt="Hero Image" class="w-full max-w-md lg:max-w-[90%] relative z-10 drop-shadow-[0_0_40px_rgba(0,245,255,0.5)] animate-[float_6s_ease-in-out_infinite]">
+            <img src="<%= settings['hero_image'] || '/images/hero.png' %>" alt="Hero Image" class="w-full max-w-md lg:max-w-[90%] relative z-10 drop-shadow-[0_0_25px_rgba(0,245,255,0.3)] animate-[float_6s_ease-in-out_infinite]">
         </div>
     </div>
     
