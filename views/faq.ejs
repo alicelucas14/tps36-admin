@@ -4,16 +4,16 @@
     <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/5 blur-[150px] rounded-full pointer-events-none"></div>
 
     <div class="text-center mb-16 relative z-10">
-        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-wider uppercase text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">Frequently Asked <span class="text-secondary drop-shadow-[0_0_10px_rgba(0,245,255,0.5)]">Questions</span></h1>
-        <div class="w-24 h-1 bg-secondary mx-auto shadow-neon"></div>
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-wider uppercase text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">Frequently Asked <span class="text-cta drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">Questions</span></h1>
+        <div class="w-24 h-1 bg-cta mx-auto shadow-gold"></div>
     </div>
     
     <div class="space-y-4 relative z-10">
         <% faqs.forEach(f => { %>
         <details class="group bg-accent/60 backdrop-blur-sm rounded-xl border border-secondary/10 open:border-secondary/40 hover:border-secondary/30 transition-all duration-300">
-            <summary class="flex justify-between items-center font-bold tracking-wide cursor-pointer list-none p-6 md:p-8 text-white group-hover:text-secondary transition-colors text-lg">
+            <summary class="flex justify-between items-center font-bold tracking-wide cursor-pointer list-none p-6 md:p-8 text-white group-hover:text-cta transition-colors text-lg">
                 <span><%= f.question %></span>
-                <span class="transition-transform group-open:rotate-180 text-secondary bg-secondary/10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 ml-4 border border-secondary/20 group-hover:border-secondary shadow-[0_0_10px_rgba(0,245,255,0.2)]">
+                <span class="transition-transform group-open:rotate-180 text-cta bg-cta/10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 ml-4 border border-cta/20 group-hover:border-cta shadow-[0_0_10px_rgba(250,204,21,0.2)]">
                     <i class="fa-solid fa-chevron-down text-sm"></i>
                 </span>
             </summary>
