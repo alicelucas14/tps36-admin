@@ -11,8 +11,8 @@
             <div class="inline-block px-4 py-1 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-xs font-bold tracking-widest uppercase mb-2 shadow-neon">
                 <%= settings['hero_badge_text'] || 'Welcome to the VIP Club' %>
             </div>
-            <h1 class="text-[2.5rem] md:text-5xl lg:text-[4rem] font-black tracking-tighter leading-[1.1] text-[#FFF200]" style="text-shadow: 0 4px 6px rgba(0,0,0,0.5);">
-                <%- settings['hero_title'] || 'Teen Patti <br/> <span style="text-shadow: 0 4px 6px rgba(0,0,0,0.5), 0 0 20px rgba(255,242,0,0.8), 0 0 40px rgba(255,242,0,0.4);">Stars</span>' %>
+            <h1 class="text-[3rem] md:text-6xl lg:text-[4.5rem] font-black tracking-tighter leading-[1.1] text-[#fff200]" style="-webkit-text-stroke: 2px #d61858; text-shadow: 2px 4px 8px rgba(0,0,0,0.6), 0px 5px 0px #a30e40;">
+                <%- settings['hero_title'] || 'Teen Patti <br/> Stars' %>
             </h1>
             <p class="text-base md:text-lg leading-relaxed text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium">
                 <%- settings['hero_subtitle'] || 'Experience the ultimate thrill. Play real cash <strong class="text-white">Teen Patti</strong> and <strong class="text-white">Rummy</strong> with VIP tables, instant withdrawals, and elite 24/7 support.' %>
@@ -324,15 +324,33 @@
                         const wrapper = document.querySelector(".lazy-video-wrapper-tps");
                         const playButton = document.querySelector(".lazy-video-play-button-tps");
                         if (!playButton || !wrapper) return;
+
+                        // Preload metadata in the background to eliminate the "delay to play"
+                        const video = document.createElement("video");
+                        video.className = "lazy-video-tps";
+                        video.preload = "metadata"; // Fetches video headers immediately
+                        video.playsInline = true;
+                        video.style.cssText = "width:100%;height:auto;display:none;";
+                        video.innerHTML = `<source src="/uploads/TPS-Video.mov" type="video/mp4">Your browser does not support the video tag.`;
+                        wrapper.appendChild(video);
+
                         playButton.addEventListener("click", function () {
-                            const video = document.createElement("video");
-                            video.className = "lazy-video-tps";
+                            // Hide custom thumbnail, play button, and captions
+                            Array.from(wrapper.children).forEach(child => {
+                                if (child !== video) child.style.display = 'none';
+                            });
+                            
+                            // Show the video player and start playing instantly
+                            video.style.display = 'block';
                             video.controls = true;
-                            video.autoplay = true;
-                            video.style.cssText = "width:100%;height:auto;display:block;";
-                            video.innerHTML = `<source src="/uploads/TPS-Video.mov" type="video/mp4">Your browser does not support the video tag.`;
-                            wrapper.innerHTML = "";
-                            wrapper.appendChild(video);
+                            
+                            // A quick promise catch in case autoplay is blocked by browser policies
+                            const playPromise = video.play();
+                            if (playPromise !== undefined) {
+                                playPromise.catch(error => {
+                                    console.log("Auto-play prevented by browser. User must click play on the controls.");
+                                });
+                            }
                         });
                     });
                 </script>
