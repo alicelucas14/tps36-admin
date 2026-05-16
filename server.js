@@ -31,6 +31,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const app = express();
+
+// Redirect trailing slashes to non-trailing slash URLs for SEO & consistent routing
+app.use((req, res, next) => {
+    if (req.path.endsWith('/') && req.path.length > 1) {
+        const query = req.url.slice(req.path.length);
+        return res.redirect(301, req.path.slice(0, -1) + query);
+    }
+    next();
+});
+
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
