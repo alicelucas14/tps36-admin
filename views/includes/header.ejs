@@ -93,6 +93,25 @@
 </head>
 <body class="bg-primary text-white flex flex-col min-h-screen">
     <nav class="fixed w-full top-0 z-50 bg-accent/80 backdrop-blur-md border-b border-cta/30 shadow-gold">
+        <% if(settings['social_facebook'] || settings['social_telegram'] || settings['social_whatsapp']) { %>
+        <!-- Top Social Bar -->
+        <div class="bg-[#1a0008] border-b border-cta/20 py-1.5 px-4">
+            <div class="max-w-7xl mx-auto flex justify-center sm:justify-end items-center gap-4 sm:gap-6">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:inline">Connect with us</span>
+                <div class="flex items-center gap-4">
+                    <% if(settings['social_facebook']) { %>
+                        <a href="<%= settings['social_facebook'] %>" target="_blank" class="text-slate-400 hover:text-[#1877F2] transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                    <% } %>
+                    <% if(settings['social_telegram']) { %>
+                        <a href="<%= settings['social_telegram'] %>" target="_blank" class="text-slate-400 hover:text-[#229ED9] transition-colors"><i class="fa-brands fa-telegram text-sm"></i></a>
+                    <% } %>
+                    <% if(settings['social_whatsapp']) { %>
+                        <a href="<%= settings['social_whatsapp'] %>" target="_blank" class="text-slate-400 hover:text-[#25D366] transition-colors"><i class="fa-brands fa-whatsapp text-sm"></i></a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% } %>
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex items-center justify-between h-24">
                 <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
